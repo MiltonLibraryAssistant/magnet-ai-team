@@ -1,8 +1,7 @@
 package com.github.miltonlibraryassistant.mcp.entity;
 
-import arthurtheai.neoncitymod.References;
-import arthurtheai.neoncitymod.entity.EntityCityBird;
-import arthurtheai.neoncitymod.models.neoncitybirdmodel;
+import com.github.miltonlibraryassistant.mcp.References;
+
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.renderer.entity.RenderLiving;
 import net.minecraft.entity.Entity;
@@ -19,13 +18,13 @@ public class RenderEntityMCP extends RenderLiving {
         this.setRenderPassModel(this.mcpModel);
 	}
 
-	protected ResourceLocation getEntityTexture(EntityCityBird entity) {
+	protected ResourceLocation getEntityTexture(EntityMCP entity) {
 		return mcpTexture; 
 	}
 
 	@Override
 	protected ResourceLocation getEntityTexture(Entity entity) {
-		return this.getEntityTexture((EntityCityBird)entity); 
+		return this.getEntityTexture((EntityMCP)entity);  
 	}
 
 }

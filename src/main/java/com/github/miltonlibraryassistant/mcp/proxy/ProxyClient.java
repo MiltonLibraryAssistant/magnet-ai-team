@@ -1,7 +1,5 @@
 package com.github.miltonlibraryassistant.mcp.proxy;
 
-import arthurtheai.neoncitymod.models.neoncitybirdmodel;
-
 import com.github.miltonlibraryassistant.mcp.entity.EntityMCP;
 import com.github.miltonlibraryassistant.mcp.entity.RenderEntityMCP;
 

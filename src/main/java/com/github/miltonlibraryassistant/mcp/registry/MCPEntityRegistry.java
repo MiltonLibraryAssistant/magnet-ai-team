@@ -1,13 +1,11 @@
 package com.github.miltonlibraryassistant.mcp.registry;
 
 import com.github.miltonlibraryassistant.mcp.MainMCP;
-import com.github.miltonlibraryassistant.mcp.entity.EntityMCP;
 
+import com.github.miltonlibraryassistant.mcp.entity.EntityMCP;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.world.biome.BiomeGenBase;
-import arthurtheai.neoncitymod.NeonCityMod;
-import arthurtheai.neoncitymod.entity.EntityCityBird;
 import cpw.mods.fml.common.registry.EntityRegistry;
 
 public class MCPEntityRegistry {
