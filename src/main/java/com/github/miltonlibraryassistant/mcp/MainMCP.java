@@ -3,10 +3,13 @@ package com.github.miltonlibraryassistant.mcp;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.world.WorldType;
 
+import com.github.miltonlibraryassistant.mcp.biome.BiomeRegistry;
 import com.github.miltonlibraryassistant.mcp.block.FoodBlock;
 import com.github.miltonlibraryassistant.mcp.proxy.ProxyCommon;
 import com.github.miltonlibraryassistant.mcp.registry.MCPEntityRegistry;
+import com.github.miltonlibraryassistant.mcp.world.WorldTypeTestField;
 
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.SidedProxy;
@@ -32,6 +35,7 @@ public class MainMCP {
 		public void preInit(FMLPreInitializationEvent event) {
 			theproxy.registerRenderThings();
 			MCPEntityRegistry.mainRegistry();
+			BiomeRegistry.mainRegistry();
 			
 			//Registration of blocks and items
 			blockFoodBlock = new FoodBlock(Material.gourd).setBlockName("Food Block").setCreativeTab(CreativeTabs.tabBlock).setBlockTextureName(References.modId.concat(":FoodBlock"));
@@ -46,6 +50,8 @@ public class MainMCP {
 		
 		@EventHandler
 		public void postInit(FMLPostInitializationEvent event) {
+			
+			WorldType TESTFIELD = new WorldTypeTestField(3, "testfield");
 			
 		}
 }
