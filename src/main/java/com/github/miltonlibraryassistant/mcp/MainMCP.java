@@ -18,6 +18,7 @@ import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import cpw.mods.fml.common.registry.GameRegistry;
 
 @Mod(modid = References.modId, name = References.name, version = References.version)
 public class MainMCP {
@@ -38,7 +39,8 @@ public class MainMCP {
 			BiomeRegistry.mainRegistry();
 			
 			//Registration of blocks and items
-			blockFoodBlock = new FoodBlock(Material.gourd).setBlockName("Food Block").setCreativeTab(CreativeTabs.tabBlock).setBlockTextureName(References.modId.concat(":FoodBlock"));
+			blockFoodBlock = new FoodBlock(Material.gourd).setBlockName("FoodBlock").setCreativeTab(CreativeTabs.tabBlock).setBlockTextureName(References.modId.concat(":FoodBlock"));
+			GameRegistry.registerBlock(blockFoodBlock, blockFoodBlock.getUnlocalizedName().substring(5)); 
 		}
 		
 		@EventHandler

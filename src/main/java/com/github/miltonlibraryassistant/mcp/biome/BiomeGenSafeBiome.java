@@ -1,6 +1,10 @@
 package com.github.miltonlibraryassistant.mcp.biome;
 
+import com.github.miltonlibraryassistant.mcp.worldgen.FoodBiomeDecorator;
+
+import net.minecraft.world.biome.BiomeDecorator;
 import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraftforge.event.terraingen.DeferredBiomeDecorator;
 
 public class BiomeGenSafeBiome extends BiomeGenBase {
     
@@ -12,6 +16,12 @@ public class BiomeGenSafeBiome extends BiomeGenBase {
         this.spawnableWaterCreatureList.clear();
         this.spawnableCaveCreatureList.clear();
 	}
+	
+	@Override
+    public BiomeDecorator getModdedBiomeDecorator(BiomeDecorator original)
+    {
+        return new FoodBiomeDecorator();
+    }
 	
 
 }
