@@ -28,6 +28,12 @@ public class GridSearchFramework {
 		return new QuadrantPoint(XPosRounded, ZPosRounded); 
 	}
 	
+	public static QuadrantCenter getQuadrantCenter(XPosRounded,ZPosRounded){
+			XPosCenter = (20 * XPosRounded) + 10;
+			ZPosCenter = (20 * ZPosRounded) + 10;
+			return new QuadrantCenter(XPosCenter,ZPosCenter)
+	}
+	
 	public static void writeQuadrantToJSON(QuadrantPoint quadrant) throws IOException{
 		//declare write object and read object 
 		JSONObject quadrantData = new JSONObject(); 
