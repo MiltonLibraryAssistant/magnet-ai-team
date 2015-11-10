@@ -34,6 +34,13 @@ public class GridSearchFramework {
 		return new QuadrantPoint(XPosRounded, ZPosRounded); 
 	}
 	
+	public static Block getQuadrantCenter(double XPosRounded, double ZPosRounded, World par3World){
+		//Finding the quadrant's center by multiplying the quadrant # by 20 to get the actual quadrant length, and then adding 10 to get the center. 
+		double XPosCenter = (20 * XPosRounded) + 10;
+		double ZPosCenter = (20 * ZPosRounded) + 10;
+		return par3World.getTopBlock((int) XPosRounded, (int) ZPosRounded); 
+	}
+	
 	public static void writeQuadrantToJSON(QuadrantPoint quadrant, World par2World) throws IOException{
 			//declare write object and read object 
 			JSONObject quadrantData = new JSONObject(); 
