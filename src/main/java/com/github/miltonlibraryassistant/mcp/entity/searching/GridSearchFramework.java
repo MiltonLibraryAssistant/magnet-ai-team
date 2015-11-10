@@ -65,25 +65,18 @@ public class GridSearchFramework {
 					}
 					br.close(); 
 
-					Double readXPos = (Double) jsonFileRead.get("XPos"); 
-					Double readZPos = (Double) jsonFileRead.get("ZPos");
-					String readWorld = (String) jsonFileRead.get("World"); 
+					JSONObject readQuadrantData = (JSONObject) jsonFileRead.get((Double.toString(quadrant.X) + "--" + Double.toString(quadrant.Z) + world)); 
 					
 					//if the quadrant is not currently stored in the file, write to the file with the newly added quadrant 
-					if(quadrantData.get("World") != jsonFileRead.get("World")){
-						if(readXPos != null && readZPos != null){
-							if(!(readXPos == quadrant.X && readZPos == quadrant.Z)){
-								jsonFileRead.put((Double.toString(quadrant.X) + "--" + Double.toString(quadrant.Z) + world), quadrantData);
-								writeJSON(jsonFileRead); 
-							}
-						}
-						else{
+					if(readQuadrantData == null){
 							jsonFileRead.put((Double.toString(quadrant.X) + "--" + Double.toString(quadrant.Z) + world), quadrantData);
 							writeJSON(jsonFileRead); 
-						}	
 					}
+					else{
+						//saving this part of the method for later
+					}	
 					
-				} catch (ParseException e) {
+					}catch (ParseException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
