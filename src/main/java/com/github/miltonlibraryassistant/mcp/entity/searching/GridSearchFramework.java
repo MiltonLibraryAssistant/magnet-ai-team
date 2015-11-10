@@ -32,7 +32,7 @@ public class GridSearchFramework {
 		//Finding the quadrant's center by multiplying the quadrant # by 20 to get the actual quadrant length, and then adding 10 to get the center. 
 		XPosCenter = (20 * XPosRounded) + 10;
 		ZPosCenter = (20 * ZPosRounded) + 10;
-			return new QuadrantCenter(XPosCenter,ZPosCenter)
+		return new QuadrantCenter(XPosCenter, ZPosCenter);
 	}
 	
 	public static void writeQuadrantToJSON(QuadrantPoint quadrant) throws IOException{
