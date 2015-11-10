@@ -1,14 +1,14 @@
 [
 {
-  "modid": "examplemod",
-  "name": "Example Mod",
-  "description": "Example placeholder mod.",
-  "version": "${version}",
-  "mcversion": "${mcversion}",
+  "modid": "MAGNETCODEPROJECT",
+  "name": "Magnet Coding Project",
+  "description": "Magnet AI coding project 2015-2016",
+  "version": "0.0.1",
+  "mcversion": "",
   "url": "",
   "updateUrl": "",
-  "authorList": ["ExampleDude"],
-  "credits": "The Forge and FML guys, for making this example",
+  "authorList": ["D S", "A J", "M C", "Q B"],
+  "credits": "Team Aperture Labs @ CHS",
   "logoFile": "",
   "screenshots": [],
   "dependencies": []

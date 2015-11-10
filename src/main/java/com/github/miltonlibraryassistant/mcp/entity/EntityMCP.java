@@ -27,7 +27,7 @@ public class EntityMCP extends EntityCreature {
     	super.onLivingUpdate(); 
     	QuadrantPoint currentQuadrant = GridSearchFramework.getQuadrant(this.posX, this.posZ);
     	try {
-			GridSearchFramework.writeQuadrantToJSON(currentQuadrant);
+			GridSearchFramework.writeQuadrantToJSON(currentQuadrant, this.worldObj);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

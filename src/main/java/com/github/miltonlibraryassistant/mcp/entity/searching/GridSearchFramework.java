@@ -1,6 +1,8 @@
 package com.github.miltonlibraryassistant.mcp.entity.searching;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
@@ -11,48 +13,75 @@ import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.math.RoundingMode;
+import java.nio.file.Path;
 import java.text.DecimalFormat;
 
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.server.FMLServerHandler;
 import net.minecraft.block.Block;
+import net.minecraft.world.World;
 
 public class GridSearchFramework {
 	
 	public static QuadrantPoint getQuadrant(double posX, double posZ){
 		//Dividing by 20 then subtracting the remainder to get the quadrant. 
-		double XPosRounded = Math.round((posX / 20) - (posX % 20)) * 1d / 1d; 
-		double ZPosRounded = Math.round((posZ / 20) - (posX % 20)) * 1d / 1d; 
+		double XPosRounded = Math.round((posX / 20)) * 1d / 1d; 
+		double ZPosRounded = Math.round((posZ / 20)) * 1d / 1d; 
 		return new QuadrantPoint(XPosRounded, ZPosRounded); 
 	}
 	
-	public static void writeQuadrantToJSON(QuadrantPoint quadrant) throws IOException{
-		//declare write object and read object 
-		JSONObject quadrantData = new JSONObject(); 
-		JSONParser parser = new JSONParser(); 
-		
-		//add x and z pos to json data for output
-		quadrantData.put("XPos", quadrant.X); 
-		quadrantData.put("ZPos", quadrant.Z); 
-		
-		try {
-			//Read x and y pos from json
-			Object fileRead = parser.parse(new FileReader ("quadrants.json"));
-			JSONObject jsonFileRead = (JSONObject) fileRead; 
-			Double readXPos = (Double) jsonFileRead.get("XPos"); 
-			Double readZPos = (Double) jsonFileRead.get("ZPos"); 
+	public static void writeQuadrantToJSON(QuadrantPoint quadrant, World par2World) throws IOException{
+			//declare write object and read object 
+			JSONObject quadrantData = new JSONObject(); 
+			JSONParser parser = new JSONParser(); 
 			
-			if(!(readXPos == quadrant.X && readZPos == quadrant.Z)){
-				//if the quadrant is not currently stored in the file, write to the file with the newly added quadrant
-				writeJSON(quadrantData); 
+			//add x and z pos to json data for output
+			quadrantData.put("XPos", quadrant.X); 
+			quadrantData.put("ZPos", quadrant.Z); 
+			if(!(par2World.isRemote)){
+				String world = par2World.getSaveHandler().getWorldDirectoryName();
+				quadrantData.put("World", world); 
+				
+				try {
+					//Read x and y pos from json
+					
+					JSONObject jsonFileRead = new JSONObject(); 
+					
+					BufferedReader br = new BufferedReader(new FileReader("quadrants.json"));     
+					if (!(br.readLine() == null)) {
+						Object fileRead = parser.parse(new FileReader ("quadrants.json"));
+						jsonFileRead = (JSONObject) fileRead; 
+					}
+					br.close(); 
+
+					Double readXPos = (Double) jsonFileRead.get("XPos"); 
+					Double readZPos = (Double) jsonFileRead.get("ZPos");
+					String readWorld = (String) jsonFileRead.get("World"); 
+					
+					//if the quadrant is not currently stored in the file, write to the file with the newly added quadrant 
+					if(quadrantData.get("World") != jsonFileRead.get("World")){
+						if(readXPos != null && readZPos != null){
+							if(!(readXPos == quadrant.X && readZPos == quadrant.Z)){
+								jsonFileRead.put((Double.toString(quadrant.X) + "--" + Double.toString(quadrant.Z) + world), quadrantData);
+								writeJSON(jsonFileRead); 
+							}
+						}
+						else{
+							jsonFileRead.put((Double.toString(quadrant.X) + "--" + Double.toString(quadrant.Z) + world), quadrantData);
+							writeJSON(jsonFileRead); 
+						}	
+					}
+					
+				} catch (ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
-			
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} 
+
 
 	}
 	
