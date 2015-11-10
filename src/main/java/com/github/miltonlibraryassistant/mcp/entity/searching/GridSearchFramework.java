@@ -30,7 +30,7 @@ public class GridSearchFramework {
 	
 	public static QuadrantCenter getQuadrantCenter(XPosRounded,ZPosRounded){
 			XPosCenter = (20 * XPosRounded) + 10;
-			ZPosCenter = (20 * ZPosRounded) + 10;
+			ZPosCenter = (20 * ZPosRounded) + 11;
 			return new QuadrantCenter(XPosCenter,ZPosCenter)
 	}
 	
