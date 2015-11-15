@@ -24,6 +24,8 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.server.FMLServerHandler;
 import net.minecraft.block.Block;
 import net.minecraft.world.World;
+import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraftforge.common.BiomeManager.BiomeEntry;
 
 public class GridSearchFramework {
 	
@@ -34,12 +36,16 @@ public class GridSearchFramework {
 		return new QuadrantPoint(XPosRounded, ZPosRounded); 
 	}
 	
-	public static Block getQuadrantCenter(double XPosRounded, double ZPosRounded, World par3World){
+	public static BlockPosition getQuadrantCenter(double XPosRounded, double ZPosRounded, World par3World){
 		//Finding the quadrant's center by multiplying the quadrant # by 20 to get the actual quadrant length, and then adding 10 to get the center. 
 		double XPosCenter = (20 * XPosRounded) + 10;
 		double ZPosCenter = (20 * ZPosRounded) + 10;
-		return par3World.getTopBlock((int) XPosRounded, (int) ZPosRounded); 
+		return getTopBlock((int) XPosRounded, (int) ZPosRounded, par3World); 
 	}
+	
+	public static BiomeGenBase getBiomeFromBlock(BlockPosition block, World world){
+		return world.getBiomeGenForCoords((int) block.x, (int) block.z); 
+	} 
 	
 	public static void writeQuadrantToJSON(QuadrantPoint quadrant, World par2World) throws IOException{
 			//declare write object and read object 
@@ -49,6 +55,10 @@ public class GridSearchFramework {
 			//add x and z pos to json data for output
 			quadrantData.put("XPos", quadrant.X); 
 			quadrantData.put("ZPos", quadrant.Z); 
+			BlockPosition quadrantCenter = getQuadrantCenter(quadrant.X, quadrant.Z, par2World); 
+			BiomeGenBase biome = getBiomeFromBlock(quadrantCenter, par2World); 
+			quadrantData.put("biome", biome.biomeName); 
+			
 			if(!(par2World.isRemote)){
 				String world = par2World.getSaveHandler().getWorldDirectoryName();
 				quadrantData.put("World", world); 
@@ -95,4 +105,16 @@ public class GridSearchFramework {
 		writer.write(jsonText); 
 		writer.close(); 
 	}
+	
+    public static BlockPosition getTopBlock(int x, int z, World par3World)
+    {
+        int k;
+
+        for (k = 63; !par3World.isAirBlock(x, k + 1, z); ++k)
+        {
+            ;
+        }
+
+        return new BlockPosition(x, k, z);
+    }
 }
