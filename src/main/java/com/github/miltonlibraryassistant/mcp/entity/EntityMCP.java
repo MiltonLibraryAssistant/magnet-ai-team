@@ -33,4 +33,9 @@ public class EntityMCP extends EntityCreature {
 			e.printStackTrace();
 		} 
     }
+    
+    protected boolean canDespawn()
+    {
+        return false;
+    }
 }
