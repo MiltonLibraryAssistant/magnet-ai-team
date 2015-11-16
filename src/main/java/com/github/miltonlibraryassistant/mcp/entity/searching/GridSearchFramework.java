@@ -56,9 +56,9 @@ public class GridSearchFramework {
 			quadrantData.put("XPos", quadrant.X); 
 			quadrantData.put("ZPos", quadrant.Z); 
 			BlockPosition quadrantCenter = getQuadrantCenter(quadrant.X, quadrant.Z, par2World); 
-			System.out.println(quadrantCenter.x + " " + quadrantCenter.y + " " + quadrantCenter.z); 
 			BiomeGenBase biome = getBiomeFromBlock(quadrantCenter, par2World); 
 			quadrantData.put("biome", biome.biomeName); 
+			BiomeWriteFramework.writeBiomeToJSON(biome, par2World); 
 			
 			if(!(par2World.isRemote)){
 				String world = par2World.getSaveHandler().getWorldDirectoryName();
@@ -81,7 +81,7 @@ public class GridSearchFramework {
 					//if the quadrant is not currently stored in the file, write to the file with the newly added quadrant 
 					if(readQuadrantData == null){
 							jsonFileRead.put((Double.toString(quadrant.X) + "--" + Double.toString(quadrant.Z) + world), quadrantData);
-							writeJSON(jsonFileRead); 
+							writeJSON(jsonFileRead, "quadrants.json"); 
 					}
 					else{
 						//saving this part of the method for later
@@ -97,12 +97,12 @@ public class GridSearchFramework {
 	}
 	
 	/**Writes given JSONObject to JSON file. Takes a JSONObject as a parameter.**/
-	public static void writeJSON(JSONObject json) throws IOException{
+	public static void writeJSON(JSONObject json, String filename) throws IOException{
 		//writing data to json file
 		StringWriter out = new StringWriter(); 
 		json.writeJSONString(out); 
 		String jsonText = out.toString(); 
-		Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("quadrants.json"), "utf-8")); 
+		Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(filename), "utf-8")); 
 		writer.write(jsonText); 
 		writer.close(); 
 	}
