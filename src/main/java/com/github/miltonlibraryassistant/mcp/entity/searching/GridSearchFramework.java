@@ -31,8 +31,8 @@ public class GridSearchFramework {
 	
 	public static QuadrantPoint getQuadrant(double posX, double posZ){
 		//Dividing by 20 then subtracting the remainder to get the quadrant. 
-		double XPosRounded = Math.round((posX / 20)) * 1d / 1d; 
-		double ZPosRounded = Math.round((posZ / 20)) * 1d / 1d; 
+		double XPosRounded = Math.floor((posX / 20)); 
+		double ZPosRounded = Math.floor((posZ / 20)); 
 		return new QuadrantPoint(XPosRounded, ZPosRounded); 
 	}
 	
@@ -40,7 +40,7 @@ public class GridSearchFramework {
 		//Finding the quadrant's center by multiplying the quadrant # by 20 to get the actual quadrant length, and then adding 10 to get the center. 
 		double XPosCenter = (20 * XPosRounded) + 10;
 		double ZPosCenter = (20 * ZPosRounded) + 10;
-		return getTopBlock((int) XPosRounded, (int) ZPosRounded, par3World); 
+		return getTopBlock((int) XPosCenter, (int) ZPosCenter, par3World); 
 	}
 	
 	public static BiomeGenBase getBiomeFromBlock(BlockPosition block, World world){
@@ -56,6 +56,7 @@ public class GridSearchFramework {
 			quadrantData.put("XPos", quadrant.X); 
 			quadrantData.put("ZPos", quadrant.Z); 
 			BlockPosition quadrantCenter = getQuadrantCenter(quadrant.X, quadrant.Z, par2World); 
+			System.out.println(quadrantCenter.x + " " + quadrantCenter.y + " " + quadrantCenter.z); 
 			BiomeGenBase biome = getBiomeFromBlock(quadrantCenter, par2World); 
 			quadrantData.put("biome", biome.biomeName); 
 			
