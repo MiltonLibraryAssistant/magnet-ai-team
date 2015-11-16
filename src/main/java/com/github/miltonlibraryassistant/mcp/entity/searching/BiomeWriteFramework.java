@@ -18,7 +18,7 @@ public class BiomeWriteFramework {
 		JSONObject biomeData = new JSONObject(); 
 		JSONParser parser = new JSONParser(); 
 		
-		//add x and z pos to json data for output
+		//add biome to json data for output
 		biomeData.put("Biome", biome.biomeName); 
 		
 		if(!(par2World.isRemote)){
@@ -26,9 +26,11 @@ public class BiomeWriteFramework {
 			biomeData.put("World", world); 
 			
 			try {
-				//Read x and y pos from json
+				//Read biome from json
 				
 				JSONObject jsonFileRead = new JSONObject(); 
+				
+				GridSearchFramework.testFileExists("biomes.json"); 
 				
 				BufferedReader br = new BufferedReader(new FileReader("biomes.json"));     
 				if (!(br.readLine() == null)) {
@@ -39,7 +41,7 @@ public class BiomeWriteFramework {
 
 				JSONObject readQuadrantData = (JSONObject) jsonFileRead.get(biome.biomeName); 
 				
-				//if the quadrant is not currently stored in the file, write to the file with the newly added quadrant 
+				//if the biome is not currently stored in the file, write to the file with the newly added biome 
 				if(readQuadrantData == null){
 						jsonFileRead.put(biome.biomeName, biomeData);
 						GridSearchFramework.writeJSON(jsonFileRead, "biomes.json"); 

@@ -69,6 +69,7 @@ public class GridSearchFramework {
 					
 					JSONObject jsonFileRead = new JSONObject(); 
 					
+					testFileExists("quadrants.json"); 
 					BufferedReader br = new BufferedReader(new FileReader("quadrants.json"));     
 					if (!(br.readLine() == null)) {
 						Object fileRead = parser.parse(new FileReader ("quadrants.json"));
@@ -96,6 +97,13 @@ public class GridSearchFramework {
 
 	}
 	
+	public static void testFileExists(String filename) throws IOException {
+		File outputfile = new File(filename);
+		if(!outputfile.exists()) {
+		    outputfile.createNewFile();
+		} 	
+	}
+
 	/**Writes given JSONObject to JSON file. Takes a JSONObject as a parameter.**/
 	public static void writeJSON(JSONObject json, String filename) throws IOException{
 		//writing data to json file
