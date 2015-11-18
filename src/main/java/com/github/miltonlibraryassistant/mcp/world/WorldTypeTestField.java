@@ -11,6 +11,8 @@ public class WorldTypeTestField extends WorldType {
 		super(name);
 	}
 	
+    public static double MAX_ENTITY_RADIUS = 10.0D;
+    
     public GenLayer getBiomeLayer(long worldSeed, GenLayer parentLayer)
     {
         GenLayer ret = new TestFieldGenLayerBiome(200L, parentLayer, this);
