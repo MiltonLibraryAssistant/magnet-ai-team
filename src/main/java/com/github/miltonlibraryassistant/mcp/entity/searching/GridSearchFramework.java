@@ -37,13 +37,15 @@ public class GridSearchFramework {
 	}
 	
 	public static BlockPosition getQuadrantCenter(double XPosRounded, double ZPosRounded, World par3World){
-		//Finding the quadrant's center by multiplying the quadrant # by 20 to get the actual quadrant length, and then adding 10 to get the center. 
+		/**Finding the quadrant's center by multiplying the quadrant # by 20 to get the actual quadrant length
+		and then adding 10 to get the center.**/
 		double XPosCenter = (20 * XPosRounded) + 10;
 		double ZPosCenter = (20 * ZPosRounded) + 10;
 		return getTopBlock((int) XPosCenter, (int) ZPosCenter, par3World); 
 	}
 	
 	public static BiomeGenBase getBiomeFromBlock(BlockPosition block, World world){
+		//Retrieving biome based on coordinates
 		return world.getBiomeGenForCoords((int) block.x, (int) block.z); 
 	} 
 	
@@ -66,7 +68,6 @@ public class GridSearchFramework {
 				
 				try {
 					//Read x and y pos from json
-					
 					JSONObject jsonFileRead = new JSONObject(); 
 					
 					testFileExists("quadrants.json"); 
@@ -93,8 +94,6 @@ public class GridSearchFramework {
 					e.printStackTrace();
 				}
 			}
-
-
 	}
 	
 	public static void testFileExists(String filename) throws IOException {
