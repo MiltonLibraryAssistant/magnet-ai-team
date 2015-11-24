@@ -80,7 +80,8 @@ public class GridSearchFramework {
 
 					JSONObject readQuadrantData = (JSONObject) jsonFileRead.get((Double.toString(quadrant.X) + "--" + Double.toString(quadrant.Z) + world)); 
 					
-					//if the quadrant is not currently stored in the file, write to the file with the newly added quadrant 
+					/**if the quadrant is not currently stored in the file, 
+					write to the file with the newly added quadrant**/ 
 					if(readQuadrantData == null){
 							jsonFileRead.put((Double.toString(quadrant.X) + "--" + Double.toString(quadrant.Z) + world), quadrantData);
 							writeJSON(jsonFileRead, "quadrants.json"); 
