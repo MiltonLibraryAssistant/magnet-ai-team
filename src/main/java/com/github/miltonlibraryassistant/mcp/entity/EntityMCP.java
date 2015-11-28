@@ -29,7 +29,7 @@ public class EntityMCP extends EntityCreature {
     public void onLivingUpdate(){
     	super.onLivingUpdate(); 
     	QuadrantPoint currentQuadrant = GridSearchFramework.getQuadrant(this.posX, this.posZ);
-    	//getEntitiesWithinRadius(this.worldObj, 10, 0); 
+    	getEntitiesWithinRadius(this.worldObj, 10); 
     	try {
 			GridSearchFramework.writeQuadrantToJSON(currentQuadrant, this.worldObj);
 		} catch (IOException e) {
@@ -43,15 +43,15 @@ public class EntityMCP extends EntityCreature {
         return false;
     }
     
-    public void getEntitiesWithinRadius(World world, int radiusmax, int radiusmin){
-    	AxisAlignedBB aabb = AxisAlignedBB.getBoundingBox(radiusmin, radiusmin, radiusmin, radiusmax, radiusmax, radiusmax); 
+    public void getEntitiesWithinRadius(World world, int radius){
+    	AxisAlignedBB aabb = AxisAlignedBB.getBoundingBox(this.posX - radius, this.posY - radius, this.posZ - radius, this.posX + radius, this.posY + radius, this.posZ + radius); 
     	List entityList = world.getEntitiesWithinAABB(EntityCreature.class, aabb);
     	Object[] entityArray = entityList.toArray(); 
-    	if(entityArray.length > 0){
-        	for(int i = 1; i == entityArray.length; i++){
-        		Entity entity = (Entity) entityArray[i]; 
-        		int entityId = entity.getEntityId(); 
-        		System.out.println(entityId); 
+    	if(entityArray.length > 0 && !(world.isRemote)){
+        	for(int i = 0; i < entityArray.length; i++){
+        		Object entity = entityArray[i]; 
+        		Class entityId = entity.getClass(); 
+        		String entityName = entityId.getName(); 
         	}
     	}
 
