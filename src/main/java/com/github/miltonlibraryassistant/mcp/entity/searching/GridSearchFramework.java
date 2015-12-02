@@ -60,6 +60,8 @@ public class GridSearchFramework {
 			BlockPosition quadrantCenter = getQuadrantCenter(quadrant.X, quadrant.Z, par2World); 
 			BiomeGenBase biome = getBiomeFromBlock(quadrantCenter, par2World); 
 			quadrantData.put("biome", biome.biomeName); 
+			String blockposition = quadrantCenter.x + ", " + quadrantCenter.y + ", " + quadrantCenter.z; 
+			quadrantData.put("quadrantcenter", blockposition); 
 			BiomeWriteFramework.writeBiomeToJSON(biome, par2World); 
 			
 			if(!(par2World.isRemote)){

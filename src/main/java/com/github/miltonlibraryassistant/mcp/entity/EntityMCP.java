@@ -16,6 +16,8 @@ import net.minecraft.world.World;
 
 public class EntityMCP extends EntityCreature {
 
+	private int tickcount = 0; 
+	
 	public EntityMCP(World p_i1602_1_) {
 		super(p_i1602_1_);
 		this.tasks.addTask(5, new EntityAIWander(this, 1.0D));
@@ -28,14 +30,19 @@ public class EntityMCP extends EntityCreature {
     
     public void onLivingUpdate(){
     	super.onLivingUpdate(); 
-    	QuadrantPoint currentQuadrant = GridSearchFramework.getQuadrant(this.posX, this.posZ);
-    	getEntitiesWithinRadius(this.worldObj, 10); 
-    	try {
-			GridSearchFramework.writeQuadrantToJSON(currentQuadrant, this.worldObj);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} 
+    	if(tickcount == 5){
+        	QuadrantPoint currentQuadrant = GridSearchFramework.getQuadrant(this.posX, this.posZ);
+        	getEntitiesWithinRadius(this.worldObj, 10); 
+        	try {
+    			GridSearchFramework.writeQuadrantToJSON(currentQuadrant, this.worldObj);
+    		} catch (IOException e) {
+    			// TODO Auto-generated catch block
+    			e.printStackTrace();
+    		} 
+        	tickcount = 0; 
+    	}else{
+    		tickcount++; 
+    	}
     }
     
     protected boolean canDespawn()
