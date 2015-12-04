@@ -1,10 +1,18 @@
 package com.github.miltonlibraryassistant.mcp.entity;
 
+import java.io.BufferedReader;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
 
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+
+import com.github.miltonlibraryassistant.mcp.entity.searching.BiomeWriteFramework;
+import com.github.miltonlibraryassistant.mcp.entity.searching.BlockPosition;
 import com.github.miltonlibraryassistant.mcp.entity.searching.GridSearchFramework;
 import com.github.miltonlibraryassistant.mcp.entity.searching.QuadrantPoint;
 
@@ -13,6 +21,7 @@ import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.ai.EntityAIWander;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.World;
+import net.minecraft.world.biome.BiomeGenBase;
 
 public class EntityMCP extends EntityCreature {
 
@@ -32,7 +41,12 @@ public class EntityMCP extends EntityCreature {
     	super.onLivingUpdate(); 
     	if(tickcount == 5){
         	QuadrantPoint currentQuadrant = GridSearchFramework.getQuadrant(this.posX, this.posZ);
-        	getEntitiesWithinRadius(this.worldObj, 10); 
+        	try {
+				getEntitiesWithinRadius(this.worldObj, 10);
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			} 
         	try {
     			GridSearchFramework.writeQuadrantToJSON(currentQuadrant, this.worldObj);
     		} catch (IOException e) {
@@ -50,7 +64,7 @@ public class EntityMCP extends EntityCreature {
         return false;
     }
     
-    public void getEntitiesWithinRadius(World world, int radius){
+    public void getEntitiesWithinRadius(World world, int radius) throws IOException{
     	AxisAlignedBB aabb = AxisAlignedBB.getBoundingBox(this.posX - radius, this.posY - radius, this.posZ - radius, this.posX + radius, this.posY + radius, this.posZ + radius); 
     	List entityList = world.getEntitiesWithinAABB(EntityCreature.class, aabb);
     	Object[] entityArray = entityList.toArray(); 
@@ -59,8 +73,52 @@ public class EntityMCP extends EntityCreature {
         		Object entity = entityArray[i]; 
         		Class entityId = entity.getClass(); 
         		String entityName = entityId.getName(); 
+        		writeEntityToJSON(entityName, world); 
         	}
     	}
 
     }
+    
+	public static void writeEntityToJSON(String entityName, World par2World) throws IOException{
+		//declare write object and read object 
+		JSONObject entityData = new JSONObject(); 
+		JSONParser parser = new JSONParser(); 
+		
+		//add entity to json data for output
+		entityData.put("entityname", entityName); 
+		
+		if(!(par2World.isRemote)){
+			String world = par2World.getSaveHandler().getWorldDirectoryName();
+			entityData.put("World", world); 
+			
+			try {
+				//Read entities from json
+				JSONObject jsonFileRead = new JSONObject(); 
+				
+				GridSearchFramework.testFileExists("entities.json"); 
+				BufferedReader br = new BufferedReader(new FileReader("entities.json"));     
+				if (!(br.readLine() == null)) {
+					Object fileRead = parser.parse(new FileReader ("entities.json"));
+					jsonFileRead = (JSONObject) fileRead; 
+				}
+				br.close(); 
+
+				JSONObject readQuadrantData = (JSONObject) jsonFileRead.get(entityName); 
+				
+				/**if the entity is not currently stored in the file, 
+				write to the file with the newly added entity**/ 
+				if(readQuadrantData == null){
+						jsonFileRead.put(entityName, entityData);
+						GridSearchFramework.writeJSON(jsonFileRead, "entities.json"); 
+				}
+				else{
+					//saving this part of the method for later
+				}	
+				
+				}catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+}
 }
