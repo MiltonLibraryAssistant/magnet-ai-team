@@ -10,7 +10,7 @@ import com.github.miltonlibraryassistant.mcp.models.blockmodel;
 
 public class RenderEntityAggressorMCP extends RenderLiving {
 	
-	private static final ResourceLocation mcpTexture = new ResourceLocation(References.modId + ":textures/entity/EntityCityBird.png");
+	private static final ResourceLocation mcpTexture = new ResourceLocation(References.modId + ":textures/entity/EntityAggressor.png");
     private blockmodel mcpModel; 
     
     public RenderEntityAggressorMCP(ModelBase par1ModelBase, float par2) {

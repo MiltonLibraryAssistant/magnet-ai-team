@@ -10,7 +10,7 @@ import net.minecraft.util.ResourceLocation;
 
 public class RenderEntityMCP extends RenderLiving {
 	
-	private static final ResourceLocation mcpTexture = new ResourceLocation(References.modId + ":textures/entity/EntityCityBird.png");
+	private static final ResourceLocation mcpTexture = new ResourceLocation(References.modId + ":textures/entity/EntitySmart.png");
     private blockmodel mcpModel; 
     //It's a block. Not even a good block. It floats. Laziest Techne model ever. Srsly if one of you guys wants to make a better model please do
     

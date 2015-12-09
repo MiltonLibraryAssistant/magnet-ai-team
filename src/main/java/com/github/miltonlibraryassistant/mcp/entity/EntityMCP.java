@@ -20,6 +20,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.ai.EntityAIWander;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
 
@@ -73,19 +74,20 @@ public class EntityMCP extends EntityCreature {
         		Object entity = entityArray[i]; 
         		Class entityId = entity.getClass(); 
         		String entityName = entityId.getName(); 
-        		writeEntityToJSON(entityName, world); 
+        		writeEntityToJSON(entityName, world, 0); 
         	}
     	}
 
     }
     
-	public static void writeEntityToJSON(String entityName, World par2World) throws IOException{
+	public static void writeEntityToJSON(String entityName, World par2World, int entityDanger) throws IOException{
 		//declare write object and read object 
 		JSONObject entityData = new JSONObject(); 
 		JSONParser parser = new JSONParser(); 
 		
 		//add entity to json data for output
 		entityData.put("entityname", entityName); 
+		entityData.put("danger", entityDanger); 
 		
 		if(!(par2World.isRemote)){
 			String world = par2World.getSaveHandler().getWorldDirectoryName();
@@ -103,11 +105,17 @@ public class EntityMCP extends EntityCreature {
 				}
 				br.close(); 
 
-				JSONObject readQuadrantData = (JSONObject) jsonFileRead.get(entityName); 
+				JSONObject readQuadrantData = (JSONObject) jsonFileRead.get(entityName);
+				Long readDangerData = null; 
+				int dangerInt = 0; 
+				
+				if(readQuadrantData != null){
+					readDangerData = (Long) readQuadrantData.get("danger"); 	
+				}
 				
 				/**if the entity is not currently stored in the file, 
 				write to the file with the newly added entity**/ 
-				if(readQuadrantData == null){
+				if(readDangerData == null || readDangerData < entityDanger){
 						jsonFileRead.put(entityName, entityData);
 						GridSearchFramework.writeJSON(jsonFileRead, "entities.json"); 
 				}
@@ -121,4 +129,20 @@ public class EntityMCP extends EntityCreature {
 			}
 		}
 }
+	
+	public boolean attackEntityFrom(DamageSource dmgsrc, float flt){
+		Entity attackerEntity = dmgsrc.getEntity(); 
+		if(attackerEntity != null){
+			Class entityId = attackerEntity.getClass();
+			World world = attackerEntity.worldObj; 
+			try {
+				writeEntityToJSON(entityId.getName(), world, 1);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} 
+		}
+		return super.attackEntityFrom(dmgsrc, flt); 
+		
+	}
 }
