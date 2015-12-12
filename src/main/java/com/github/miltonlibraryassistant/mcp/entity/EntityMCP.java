@@ -74,13 +74,14 @@ public class EntityMCP extends EntityCreature {
         		Object entity = entityArray[i]; 
         		Class entityId = entity.getClass(); 
         		String entityName = entityId.getName(); 
-        		writeEntityToJSON(entityName, world, 0); 
+        		BlockPosition currentPosition = new BlockPosition(this.posX, this.posY, this.posZ); 
+        		writeEntityToJSON(entityName, world, 0, currentPosition); 
         	}
     	}
 
     }
     
-	public static void writeEntityToJSON(String entityName, World par2World, int entityDanger) throws IOException{
+	public static void writeEntityToJSON(String entityName, World par2World, int entityDanger, BlockPosition currentposition) throws IOException{
 		//declare write object and read object 
 		JSONObject entityData = new JSONObject(); 
 		JSONParser parser = new JSONParser(); 
@@ -88,6 +89,8 @@ public class EntityMCP extends EntityCreature {
 		//add entity to json data for output
 		entityData.put("entityname", entityName); 
 		entityData.put("danger", entityDanger); 
+		BiomeGenBase biome = GridSearchFramework.getBiomeFromBlock(currentposition, par2World); 
+		entityData.put("biome", biome.biomeName); 
 		
 		if(!(par2World.isRemote)){
 			String world = par2World.getSaveHandler().getWorldDirectoryName();
@@ -136,7 +139,8 @@ public class EntityMCP extends EntityCreature {
 			Class entityId = attackerEntity.getClass();
 			World world = attackerEntity.worldObj; 
 			try {
-				writeEntityToJSON(entityId.getName(), world, 1);
+        		BlockPosition currentPosition = new BlockPosition(this.posX, this.posY, this.posZ);
+				writeEntityToJSON(entityId.getName(), world, 1, currentPosition);
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

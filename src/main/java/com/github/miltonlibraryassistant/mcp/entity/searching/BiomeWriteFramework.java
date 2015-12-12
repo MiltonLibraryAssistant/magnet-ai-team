@@ -3,6 +3,8 @@ package com.github.miltonlibraryassistant.mcp.entity.searching;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.Iterator;
+import java.util.Set;
 
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
@@ -18,8 +20,46 @@ public class BiomeWriteFramework {
 		JSONObject biomeData = new JSONObject(); 
 		JSONParser parser = new JSONParser(); 
 		
+		int dangerRating = 0;  
+		
+		if(!(par2World.isRemote)){
+			try {
+				//Read entities from json
+				JSONObject jsonFileRead = new JSONObject(); 
+				
+				GridSearchFramework.testFileExists("entities.json"); 
+				BufferedReader br = new BufferedReader(new FileReader("entities.json"));     
+				if (!(br.readLine() == null)) {
+					Object fileRead = parser.parse(new FileReader ("entities.json"));
+					jsonFileRead = (JSONObject) fileRead; 
+				}
+				br.close(); 
+				
+				
+				 Set keys = jsonFileRead.keySet();
+				 Object[] jsonReadArray = keys.toArray(new Object[jsonFileRead.size()]); 
+				for(int i = 0; i < jsonFileRead.size(); i++){
+					Object entity = jsonReadArray[i]; 
+					String entityJSON = (String) entity;
+					JSONObject entityJSONData = (JSONObject) jsonFileRead.get(entityJSON); 
+					String entityBiome = (String) entityJSONData.get("biome"); 
+					if(entityBiome.equals(biome.biomeName)){
+						Long readdangerRating = (Long) entityJSONData.get("danger");  
+						if(readdangerRating > 0){
+							dangerRating++; 
+						}
+					}
+				}
+				
+				}catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
 		//add biome to json data for output
-		biomeData.put("Biome", biome.biomeName); 
+		biomeData.put("Biome", biome.biomeName);
+		biomeData.put("Danger", dangerRating);
 		
 		if(!(par2World.isRemote)){
 			String world = par2World.getSaveHandler().getWorldDirectoryName();
