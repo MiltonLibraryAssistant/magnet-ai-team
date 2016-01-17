@@ -40,7 +40,7 @@ public class EntityMCP extends EntityCreature {
     
     public void onLivingUpdate(){
     	super.onLivingUpdate(); 
-    	if(tickcount == 5){
+    	if(tickcount == 40){
         	QuadrantPoint currentQuadrant = GridSearchFramework.getQuadrant(this.posX, this.posZ);
         	try {
 				getEntitiesWithinRadius(this.worldObj, 10);

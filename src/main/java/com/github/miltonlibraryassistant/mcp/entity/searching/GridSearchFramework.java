@@ -20,9 +20,12 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
+import com.github.miltonlibraryassistant.mcp.References;
+
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.server.FMLServerHandler;
 import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.common.BiomeManager.BiomeEntry;
@@ -74,6 +77,8 @@ public class GridSearchFramework {
 			quadrantData.put("biome", biome.biomeName); 
 			String blockposition = quadrantCenter.x + ", " + quadrantCenter.y + ", " + quadrantCenter.z; 
 			quadrantData.put("quadrantcenter", blockposition); 
+			int waterOrFood = isWaterOrFoodInQuadrant(quadrant, par2World); 
+			quadrantData.put("waterandfood", waterOrFood); 
 			BiomeWriteFramework.writeBiomeToJSON(biome, par2World); 
 			
 			if(!(par2World.isRemote)){
@@ -133,11 +138,85 @@ public class GridSearchFramework {
     {
         int k;
 
-        for (k = 63; !par3World.isAirBlock(x, k + 1, z); ++k)
+        for (k = 20; !par3World.isAirBlock(x, k + 1, z); ++k)
         {
             ;
         }
 
         return new BlockPosition(x, k, z);
     }
+    
+
+    public static int isTopFoodBlockOrWaterBlock(int x, int z, World world){
+    	//returns 0 for nothing, 1 for food, 2 far water
+    	BlockPosition topBlock = getTopBlock(x, z, world);
+    	Block topBlockAsBlock = world.getBlock((int) topBlock.x, (int) topBlock.y, (int) topBlock.z); 
+    	if(topBlockAsBlock.getUnlocalizedName() == References.modId + ":FoodBlock"){
+    		return 1; 
+    	}
+    	if(topBlockAsBlock.getMaterial() == Material.water){
+    		return 2; 
+    	}
+    	return 0; 
+    }
+    
+    public static int isWaterOrFoodInQuadrant(QuadrantPoint quadrant, World par2World){
+    	BlockPosition quadrantCorner = getQuadrantCenter(quadrant.X, quadrant.Z, par2World); 
+    	int TrueReturnInt = 0; 
+    	quadrantCorner.x = quadrantCorner.x - 10; 
+    	quadrantCorner.z = quadrantCorner.z - 10; 
+    	for(int i = 0; i <= 20; i++){
+    		for(int j = 0; j <= 20; j++){
+	    		int returnInt = isTopFoodBlockOrWaterBlock((int) quadrantCorner.x + j, (int) quadrantCorner.z + i, par2World);
+	    		switch (TrueReturnInt) {
+	    		case 0:
+	    			//nothing
+	    				switch (returnInt) {
+	    				case 0:
+	    					//nothing
+	    					break;
+	    				case 1: 
+	    					//food
+	    					TrueReturnInt = 1;
+	    					break;
+	    				case 2:
+	    					//water
+	    					TrueReturnInt = 2;
+	    					break;
+	    				}
+	    			break;
+	    		case 1: 
+	    			//food
+					switch (returnInt) {
+					case 0:
+						//nothing + food previously
+						break;
+					case 2:
+						//water + food previously
+						TrueReturnInt = 3;
+						break;
+					}
+	    			break;
+	    		case 2:
+	    			//water
+					switch (returnInt) {
+					case 0:
+						//nothing + water previously 
+						break;
+					case 1: 
+						//food + water previously
+						TrueReturnInt = 3;
+						break;
+					}
+	    			break;
+	    		}
+	    		
+	    		if(TrueReturnInt == 3){
+	    			return TrueReturnInt; 
+	    		}
+    		}
+    	}
+    	return TrueReturnInt; 
+    }
+    
 }
