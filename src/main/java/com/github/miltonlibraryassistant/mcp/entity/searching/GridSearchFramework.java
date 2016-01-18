@@ -64,7 +64,7 @@ public class GridSearchFramework {
 		return world.getBiomeGenForCoords((int) block.x, (int) block.z); 
 	} 
 	
-	public static void writeQuadrantToJSON(QuadrantPoint quadrant, World par2World) throws IOException{
+	public static void writeQuadrantToJSON(QuadrantPoint quadrant, World par2World, boolean isDeath) throws IOException{
 			//declare write object and read object 
 			JSONObject quadrantData = new JSONObject(); 
 			JSONParser parser = new JSONParser(); 
@@ -86,6 +86,7 @@ public class GridSearchFramework {
 				quadrantData.put("World", world); 
 				
 				try {
+					
 					//Read x and y pos from json
 					JSONObject jsonFileRead = new JSONObject(); 
 					
@@ -102,11 +103,44 @@ public class GridSearchFramework {
 					/**if the quadrant is not currently stored in the file, 
 					write to the file with the newly added quadrant**/ 
 					if(readQuadrantData == null){
-							jsonFileRead.put((Double.toString(quadrant.X) + "--" + Double.toString(quadrant.Z) + world), quadrantData);
-							writeJSON(jsonFileRead, "quadrants.json"); 
+						//Read biomes file to determine base danger rating of biome
+						JSONObject biomesFileRead = new JSONObject(); 
+						
+						testFileExists("biomes.json"); 
+						BufferedReader biomesbr = new BufferedReader(new FileReader("biomes.json"));     
+						if (!(biomesbr.readLine() == null)) {
+							Object fileRead = parser.parse(new FileReader ("biomes.json"));
+							biomesFileRead = (JSONObject) fileRead; 
+						}
+						biomesbr.close(); 
+						
+						JSONObject readBiomeData = (JSONObject) biomesFileRead.get(biome.biomeName);
+						Long biomeDangerRating = (Long) readBiomeData.get("Danger");
+						Long modifiedDangerRating = biomeDangerRating; 
+						if(isDeath){
+							//if the entity has died, increase the danger rating by one from the biome rating
+							modifiedDangerRating = biomeDangerRating + 1; 
+						}
+						quadrantData.put("Danger", modifiedDangerRating); 
+						
+						jsonFileRead.put((Double.toString(quadrant.X) + "--" + Double.toString(quadrant.Z) + world), quadrantData);
+						writeJSON(jsonFileRead, "quadrants.json"); 
 					}
-					else{
-						//saving this part of the method for later
+					else {
+						Long readDangerRating = (Long) readQuadrantData.get("Danger");
+						
+						if(isDeath){
+							//if the entity has died, increase the danger rating by one from the rating in the file
+							quadrantData.put("Danger", readDangerRating + 1); 
+						}else{
+							quadrantData.put("Danger", readDangerRating); 
+						}
+						
+						if(readQuadrantData != quadrantData){
+							//if the stored quadrant data mismatches the new quadrant data, overwrite
+							jsonFileRead.replace((Double.toString(quadrant.X) + "--" + Double.toString(quadrant.Z) + world), quadrantData);
+							writeJSON(jsonFileRead, "quadrants.json"); 
+						}
 					}	
 					
 					}catch (ParseException e) {

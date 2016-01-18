@@ -49,7 +49,7 @@ public class EntityMCP extends EntityCreature {
 				e1.printStackTrace();
 			} 
         	try {
-    			GridSearchFramework.writeQuadrantToJSON(currentQuadrant, this.worldObj);
+    			GridSearchFramework.writeQuadrantToJSON(currentQuadrant, this.worldObj, false);
     		} catch (IOException e) {
     			// TODO Auto-generated catch block
     			e.printStackTrace();
@@ -155,4 +155,16 @@ public class EntityMCP extends EntityCreature {
 		return super.attackEntityFrom(dmgsrc, flt); 
 		
 	}
+	
+	public void onDeath(DamageSource par1DmgSrc){
+    	QuadrantPoint currentQuadrant = GridSearchFramework.getQuadrant(this.posX, this.posZ);
+    	try {
+			GridSearchFramework.writeQuadrantToJSON(currentQuadrant, this.worldObj, true);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 
+    	super.onDeath(par1DmgSrc);
+	}
+	
 }
