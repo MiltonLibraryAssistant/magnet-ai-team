@@ -46,6 +46,7 @@ public class BiomeWriteFramework {
 					if(entityBiome.equals(biome.biomeName)){
 						Long readdangerRating = (Long) entityJSONData.get("danger");  
 						if(readdangerRating > 0){
+							//for every dangerous entity found in a given biome, the biome's danger rating is incrememnted
 							dangerRating++; 
 						}
 					}

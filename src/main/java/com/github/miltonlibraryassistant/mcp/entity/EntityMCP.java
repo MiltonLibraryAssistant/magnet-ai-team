@@ -88,7 +88,6 @@ public class EntityMCP extends EntityCreature {
 		
 		//add entity to json data for output
 		entityData.put("entityname", entityName); 
-		entityData.put("danger", entityDanger); 
 		BiomeGenBase biome = GridSearchFramework.getBiomeFromBlock(currentposition, par2World); 
 		entityData.put("biome", biome.biomeName); 
 		
@@ -108,22 +107,28 @@ public class EntityMCP extends EntityCreature {
 				}
 				br.close(); 
 
+				//grabs specific entity name from json
 				JSONObject readQuadrantData = (JSONObject) jsonFileRead.get(entityName);
 				Long readDangerData = null; 
-				int dangerInt = 0; 
 				
+				//grabs entity danger rating from file
 				if(readQuadrantData != null){
 					readDangerData = (Long) readQuadrantData.get("danger"); 	
 				}
 				
-				/**if the entity is not currently stored in the file, 
+				/**if the entity is not currently stored in the file, or the entity's recorded danger rating is lower than the input, 
 				write to the file with the newly added entity**/ 
 				if(readDangerData == null || readDangerData < entityDanger){
-						jsonFileRead.put(entityName, entityData);
-						GridSearchFramework.writeJSON(jsonFileRead, "entities.json"); 
+					//if the entity does not exist within the file or it has attacked and not been previously recorded
+					entityData.put("danger", entityDanger); 
+					jsonFileRead.put(entityName, entityData);
+					GridSearchFramework.writeJSON(jsonFileRead, "entities.json"); 
 				}
-				else{
-					//saving this part of the method for later
+				else if(readDangerData >= entityDanger && entityDanger == 1){
+					//if the entity has attacked repeatedly and should be marked as more dangerous
+					entityData.put("danger", readDangerData + 1); 
+					jsonFileRead.put(entityName, entityData);
+					GridSearchFramework.writeJSON(jsonFileRead, "entities.json"); 	
 				}	
 				
 				}catch (ParseException e) {
@@ -141,6 +146,7 @@ public class EntityMCP extends EntityCreature {
 			try {
         		BlockPosition currentPosition = new BlockPosition(this.posX, this.posY, this.posZ);
 				writeEntityToJSON(entityId.getName(), world, 1, currentPosition);
+				System.out.println("entity written"); 
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
