@@ -6,6 +6,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
+import java.util.Set;
 
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -18,7 +19,9 @@ import com.github.miltonlibraryassistant.mcp.entity.searching.QuadrantPoint;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
+import net.minecraft.entity.ai.EntityAIAvoidEntity;
 import net.minecraft.entity.ai.EntityAIWander;
+import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
@@ -28,9 +31,43 @@ public class EntityMCP extends EntityCreature {
 
 	private int tickcount = 0; 
 	
-	public EntityMCP(World p_i1602_1_) {
-		super(p_i1602_1_);
+	public EntityMCP(World par1World) throws IOException, InstantiationException, IllegalAccessException, ClassNotFoundException {
+		super(par1World);
 		this.tasks.addTask(5, new EntityAIWander(this, 1.0D));
+		if(!(par1World.isRemote)){
+			try {
+				//Read entities from json
+				JSONParser parser = new JSONParser(); 
+				JSONObject jsonFileRead = new JSONObject(); 
+				
+				GridSearchFramework.testFileExists("entities.json"); 
+				BufferedReader br = new BufferedReader(new FileReader("entities.json"));     
+				if (!(br.readLine() == null)) {
+					Object fileRead = parser.parse(new FileReader ("entities.json"));
+					jsonFileRead = (JSONObject) fileRead; 
+				}
+				br.close(); 
+				
+				
+				 Set keys = jsonFileRead.keySet();
+				 Object[] jsonReadArray = keys.toArray(new Object[jsonFileRead.size()]); 
+				for(int i = 0; i < jsonFileRead.size(); i++){
+					Object entity = jsonReadArray[i]; 
+					String entityJSON = (String) entity;
+					JSONObject entityJSONData = (JSONObject) jsonFileRead.get(entityJSON); 
+					Long readdangerRating = (Long) entityJSONData.get("danger");  
+					String entityName = (String) entityJSONData.get("entityname"); 
+					if(readdangerRating > 0){
+						//for every dangerous entity found, an avoidance task is added
+						this.tasks.addTask(1, new EntityAIAvoidEntity(this, (Class) Class.forName(entityName), 8.0F, 0.6D, 0.6D)); 
+					}
+				}
+				
+				}catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 	}
 
     public boolean isAIEnabled()
@@ -45,13 +82,11 @@ public class EntityMCP extends EntityCreature {
         	try {
 				getEntitiesWithinRadius(this.worldObj, 10);
 			} catch (IOException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			} 
         	try {
     			GridSearchFramework.writeQuadrantToJSON(currentQuadrant, this.worldObj, false);
     		} catch (IOException e) {
-    			// TODO Auto-generated catch block
     			e.printStackTrace();
     		} 
         	tickcount = 0; 
@@ -132,7 +167,6 @@ public class EntityMCP extends EntityCreature {
 				}	
 				
 				}catch (ParseException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
@@ -145,10 +179,8 @@ public class EntityMCP extends EntityCreature {
 			World world = attackerEntity.worldObj; 
 			try {
         		BlockPosition currentPosition = new BlockPosition(this.posX, this.posY, this.posZ);
-				writeEntityToJSON(entityId.getName(), world, 1, currentPosition);
-				System.out.println("entity written"); 
+				writeEntityToJSON(entityId.getName(), world, 1, currentPosition); 
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} 
 		}
@@ -161,7 +193,6 @@ public class EntityMCP extends EntityCreature {
     	try {
 			GridSearchFramework.writeQuadrantToJSON(currentQuadrant, this.worldObj, true);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} 
     	super.onDeath(par1DmgSrc);
