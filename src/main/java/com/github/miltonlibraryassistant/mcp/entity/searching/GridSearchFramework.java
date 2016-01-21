@@ -117,24 +117,113 @@ public class GridSearchFramework {
 						JSONObject readBiomeData = (JSONObject) biomesFileRead.get(biome.biomeName);
 						Long biomeDangerRating = (Long) readBiomeData.get("Danger");
 						Long modifiedDangerRating = biomeDangerRating; 
+						//subtracting 'safety points' for water and food
+						if(waterOrFood == 1 || waterOrFood == 2){
+							modifiedDangerRating = modifiedDangerRating - 1; 
+						}
+						else if(waterOrFood == 3){
+							modifiedDangerRating = modifiedDangerRating - 2; 
+						}
 						if(isDeath){
 							//if the entity has died, increase the danger rating by one from the biome rating
 							modifiedDangerRating = biomeDangerRating + 1; 
 						}
 						quadrantData.put("Danger", modifiedDangerRating); 
 						
+						//fuzzy logic ranking of biome safety
+						//variables written as 'y values' on fl graph
+						int classification = 1; 
+						int neutralRating = 0;
+						int safetyRating = 0;
+						int dangerRating = 0; 
+						//classification: 0 = safe, 1 = true neutral, 2 = neutral + safe, 3 = neutral + danger, 4 = danger
+						if(modifiedDangerRating < 0){
+							//safe case
+							safetyRating = (int) (modifiedDangerRating * -1); 
+							if(modifiedDangerRating > -2 && modifiedDangerRating <= -1){
+								//safe and neutral case 1
+								neutralRating = (int) (modifiedDangerRating * 2 + 4); 
+								classification = 2; 
+							}
+							else if(modifiedDangerRating < 2 && modifiedDangerRating > -1){
+								//safe and neutral case 2
+								neutralRating = (int) (modifiedDangerRating * -2/3 + 1 + 1/3); 
+								classification = 2; 
+							}else{
+								classification = 0; 
+							}
+						}
+						else if(modifiedDangerRating > 0){
+							//danger case
+							dangerRating = (int) (modifiedDangerRating * 1); 
+							if(modifiedDangerRating < 2){
+								//danger and neutral case
+								neutralRating = (int) (modifiedDangerRating * -2/3 + 1 + 1/3); 
+								classification = 3;
+							}else{
+								classification = 4; 
+							}
+						}
+						quadrantData.put("Classification", classification);
+						quadrantData.put("NeutralRating", neutralRating);
+						quadrantData.put("SafetyRating", safetyRating);
+						quadrantData.put("DangerRating", dangerRating); 
+						
+						//write full file to JSON
 						jsonFileRead.put((Double.toString(quadrant.X) + "--" + Double.toString(quadrant.Z) + world), quadrantData);
 						writeJSON(jsonFileRead, "quadrants.json"); 
 					}
 					else {
 						Long readDangerRating = (Long) readQuadrantData.get("Danger");
+						Long modifiedDangerRating = (long) 0; 
 						
 						if(isDeath){
 							//if the entity has died, increase the danger rating by one from the rating in the file
 							quadrantData.put("Danger", readDangerRating + 1); 
+							modifiedDangerRating = readDangerRating + 1; 
 						}else{
 							quadrantData.put("Danger", readDangerRating); 
+							modifiedDangerRating = readDangerRating; 
 						}
+						
+						//fuzzy logic ranking of biome safety
+						//variables written as 'y values' on fl graph
+						int classification = 1; 
+						int neutralRating = 0;
+						int safetyRating = 0;
+						int dangerRating = 0; 
+						//classification: 0 = safe, 1 = true neutral, 2 = neutral + safe, 3 = neutral + danger, 4 = danger
+						if(modifiedDangerRating < 0){
+							//safe case
+							safetyRating = (int) (modifiedDangerRating * -1); 
+							if(modifiedDangerRating > -2 && modifiedDangerRating <= -1){
+								//safe and neutral case 1
+								neutralRating = (int) (modifiedDangerRating * 2 + 4); 
+								classification = 2; 
+							}
+							else if(modifiedDangerRating < 2 && modifiedDangerRating > -1){
+								//safe and neutral case 2
+								neutralRating = (int) (modifiedDangerRating * -2/3 + 1 + 1/3); 
+								classification = 2; 
+							}else{
+								classification = 0; 
+							}
+						}
+						else if(modifiedDangerRating > 0){
+							//danger case
+							dangerRating = (int) (modifiedDangerRating * 1); 
+							if(modifiedDangerRating < 2){
+								//danger and neutral case
+								neutralRating = (int) (modifiedDangerRating * -2/3 + 1 + 1/3); 
+								classification = 3;
+							}else{
+								classification = 4; 
+							}
+						}
+						quadrantData.put("Classification", classification);
+						quadrantData.put("NeutralRating", neutralRating);
+						quadrantData.put("SafetyRating", safetyRating);
+						quadrantData.put("DangerRating", dangerRating); 
 						
 						if(readQuadrantData != quadrantData){
 							//if the stored quadrant data mismatches the new quadrant data, overwrite
