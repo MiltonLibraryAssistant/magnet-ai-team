@@ -23,6 +23,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.ai.EntityAIAvoidEntity;
+import net.minecraft.entity.ai.EntityAISwimming;
 import net.minecraft.entity.ai.EntityAIWander;
 import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.nbt.NBTTagCompound;
@@ -41,6 +42,7 @@ public class EntityMCP extends EntityCreature {
 	public EntityMCP(World par1World) throws IOException, InstantiationException, IllegalAccessException, ClassNotFoundException {
 		super(par1World);
 		this.tasks.addTask(5, new EntityAIWander(this, 1.0D));
+        this.tasks.addTask(1, new EntityAISwimming(this));
 		if(!(par1World.isRemote)){
 			try {
 				//Read entities from json
@@ -347,5 +349,11 @@ public class EntityMCP extends EntityCreature {
     public void writeEntityToNBT(NBTTagCompound p_70014_1_){
     	super.writeEntityToNBT(p_70014_1_);
     	this.foodStats.writeNBT(p_70014_1_);
+    }
+    
+    //To prevent annoying drowning while testing. 
+    public boolean canBreatheUnderwater()
+    {
+        return true;
     }
 }

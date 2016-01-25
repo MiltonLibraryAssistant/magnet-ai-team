@@ -17,20 +17,20 @@ public class EntityMCPFoodStats {
     		foodTimer++; 
     	}
     	else{
-    		System.out.println("foodlevel = " + foodLevel + "thirstLevel = " + thirstLevel);
+    		//System.out.println("foodlevel = " + foodLevel + "thirstLevel = " + thirstLevel);
     		if(foodLevel > 0){
     			foodLevel = foodLevel - 0.5; 
     		}
     		else{
                 par1EntityMCP.attackEntityFrom(DamageSource.starve, 1.0F);
-                System.out.println("starving to death");
+                //System.out.println("starving to death");
     		}
     		if(thirstLevel > 0){
     			thirstLevel = thirstLevel - 0.5;
     		}
     		else{
     			par1EntityMCP.attackEntityFrom(DamageSource.starve, 1.0F); 
-    			System.out.println("dehydrating to death");
+    			//System.out.println("dehydrating to death");
     		}
     		foodTimer = 0; 
     	}
