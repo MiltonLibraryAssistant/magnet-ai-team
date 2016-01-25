@@ -12,24 +12,31 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
+import com.github.miltonlibraryassistant.mcp.References;
 import com.github.miltonlibraryassistant.mcp.entity.searching.BiomeWriteFramework;
 import com.github.miltonlibraryassistant.mcp.entity.searching.BlockPosition;
 import com.github.miltonlibraryassistant.mcp.entity.searching.GridSearchFramework;
 import com.github.miltonlibraryassistant.mcp.entity.searching.QuadrantPoint;
 
+import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.ai.EntityAIAvoidEntity;
 import net.minecraft.entity.ai.EntityAIWander;
 import net.minecraft.entity.monster.EntityZombie;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.stats.StatList;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.FoodStats;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
 
 public class EntityMCP extends EntityCreature {
 
 	private int tickcount = 0; 
+    protected EntityMCPFoodStats foodStats = new EntityMCPFoodStats();
 	
 	public EntityMCP(World par1World) throws IOException, InstantiationException, IllegalAccessException, ClassNotFoundException {
 		super(par1World);
@@ -75,6 +82,12 @@ public class EntityMCP extends EntityCreature {
         return true;
     }
     
+    protected void entityInit()
+    {
+        super.entityInit();
+        this.dataWatcher.addObject(16, Byte.valueOf((byte)0));
+    }
+    
     public void onLivingUpdate(){
     	super.onLivingUpdate(); 
     	if(tickcount == 40){
@@ -93,6 +106,8 @@ public class EntityMCP extends EntityCreature {
     	}else{
     		tickcount++; 
     	}
+    	
+    	
     }
     
     protected boolean canDespawn()
@@ -197,5 +212,140 @@ public class EntityMCP extends EntityCreature {
 		} 
     	super.onDeath(par1DmgSrc);
 	}
+    
+    @Override
+    public void onUpdate(){
+    	super.onUpdate();
+        if (!this.worldObj.isRemote)
+        {
+        	this.foodStats.onUpdate(this);
+        }
+        if(isAdjacentBlockFoodOrWater(this.worldObj, 1) == 1){
+        	this.foodStats.setHunger(this.foodStats.getHunger() + 1);
+        }
+        if(isAdjacentBlockFoodOrWater(this.worldObj, 2) == 2){
+        	this.foodStats.setThirst(this.foodStats.getThirst() + 1);
+        }
+    }
 	
+    public void readEntityFromNBT(NBTTagCompound par1NBT)
+    {
+    	super.readEntityFromNBT(par1NBT);
+    	this.foodStats.readNBT(par1NBT);
+    }
+    
+    public int isAdjacentBlockFoodOrWater(World world, int foodorwaterblock){
+    	//iterates through blocks until it finds one that matches the value passed
+    	BlockPosition entityPosition = new BlockPosition(this.posX, this.posY, this.posZ);
+    	if(isFoodBlockOrWaterBlock(entityPosition, world) == foodorwaterblock){
+    		return isFoodBlockOrWaterBlock(entityPosition, world); 
+    	}
+    	entityPosition = new BlockPosition(this.posX - 1, this.posY, this.posZ);
+    	if(isFoodBlockOrWaterBlock(entityPosition, world) == foodorwaterblock){
+    		return isFoodBlockOrWaterBlock(entityPosition, world); 
+    	}
+    	entityPosition = new BlockPosition(this.posX - 1, this.posY - 1, this.posZ);
+    	if(isFoodBlockOrWaterBlock(entityPosition, world) == foodorwaterblock){
+    		return isFoodBlockOrWaterBlock(entityPosition, world); 
+    	}
+    	entityPosition = new BlockPosition(this.posX - 1, this.posY - 1, this.posZ - 1);
+    	if(isFoodBlockOrWaterBlock(entityPosition, world) == foodorwaterblock){
+    		return isFoodBlockOrWaterBlock(entityPosition, world); 
+    	}
+    	entityPosition = new BlockPosition(this.posX - 1, this.posY - 1, this.posZ + 1);
+    	if(isFoodBlockOrWaterBlock(entityPosition, world) == foodorwaterblock){
+    		return isFoodBlockOrWaterBlock(entityPosition, world); 
+    	}
+    	entityPosition = new BlockPosition(this.posX - 1, this.posY + 1, this.posZ);
+    	if(isFoodBlockOrWaterBlock(entityPosition, world) == foodorwaterblock){
+    		return isFoodBlockOrWaterBlock(entityPosition, world); 
+    	}
+    	entityPosition = new BlockPosition(this.posX - 1, this.posY + 1, this.posZ - 1);
+    	if(isFoodBlockOrWaterBlock(entityPosition, world) == foodorwaterblock){
+    		return isFoodBlockOrWaterBlock(entityPosition, world); 
+    	}
+    	entityPosition = new BlockPosition(this.posX - 1, this.posY + 1, this.posZ + 1);
+    	if(isFoodBlockOrWaterBlock(entityPosition, world) == foodorwaterblock){
+    		return isFoodBlockOrWaterBlock(entityPosition, world); 
+    	}
+    	entityPosition = new BlockPosition(this.posX + 1, this.posY, this.posZ);
+    	if(isFoodBlockOrWaterBlock(entityPosition, world) == foodorwaterblock){
+    		return isFoodBlockOrWaterBlock(entityPosition, world); 
+    	}
+    	entityPosition = new BlockPosition(this.posX + 1, this.posY - 1, this.posZ);
+    	if(isFoodBlockOrWaterBlock(entityPosition, world) == foodorwaterblock){
+    		return isFoodBlockOrWaterBlock(entityPosition, world); 
+    	}
+    	entityPosition = new BlockPosition(this.posX + 1, this.posY - 1, this.posZ - 1);
+    	if(isFoodBlockOrWaterBlock(entityPosition, world) == foodorwaterblock){
+    		return isFoodBlockOrWaterBlock(entityPosition, world); 
+    	}
+    	entityPosition = new BlockPosition(this.posX + 1, this.posY - 1, this.posZ + 1);
+    	if(isFoodBlockOrWaterBlock(entityPosition, world) == foodorwaterblock){
+    		return isFoodBlockOrWaterBlock(entityPosition, world); 
+    	}
+    	entityPosition = new BlockPosition(this.posX + 1, this.posY + 1, this.posZ);
+    	if(isFoodBlockOrWaterBlock(entityPosition, world) == foodorwaterblock){
+    		return isFoodBlockOrWaterBlock(entityPosition, world); 
+    	}
+    	entityPosition = new BlockPosition(this.posX + 1, this.posY + 1, this.posZ + 1);
+    	if(isFoodBlockOrWaterBlock(entityPosition, world) == foodorwaterblock){
+    		return isFoodBlockOrWaterBlock(entityPosition, world); 
+    	}
+    	entityPosition = new BlockPosition(this.posX + 1, this.posY + 1, this.posZ - 1);
+    	if(isFoodBlockOrWaterBlock(entityPosition, world) == foodorwaterblock){
+    		return isFoodBlockOrWaterBlock(entityPosition, world); 
+    	}
+    	entityPosition = new BlockPosition(this.posX, this.posY - 1, this.posZ);
+    	if(isFoodBlockOrWaterBlock(entityPosition, world) == foodorwaterblock){
+    		return isFoodBlockOrWaterBlock(entityPosition, world); 
+    	}
+    	entityPosition = new BlockPosition(this.posX, this.posY - 1, this.posZ + 1);
+    	if(isFoodBlockOrWaterBlock(entityPosition, world) == foodorwaterblock){
+    		return isFoodBlockOrWaterBlock(entityPosition, world); 
+    	}
+    	entityPosition = new BlockPosition(this.posX, this.posY - 1, this.posZ - 1);
+    	if(isFoodBlockOrWaterBlock(entityPosition, world) == foodorwaterblock){
+    		return isFoodBlockOrWaterBlock(entityPosition, world); 
+    	}
+    	entityPosition = new BlockPosition(this.posX, this.posY + 1, this.posZ);
+    	if(isFoodBlockOrWaterBlock(entityPosition, world) == foodorwaterblock){
+    		return isFoodBlockOrWaterBlock(entityPosition, world); 
+    	}
+    	entityPosition = new BlockPosition(this.posX, this.posY + 1, this.posZ + 1);
+    	if(isFoodBlockOrWaterBlock(entityPosition, world) == foodorwaterblock){
+    		return isFoodBlockOrWaterBlock(entityPosition, world); 
+    	}
+    	entityPosition = new BlockPosition(this.posX, this.posY + 1, this.posZ - 1);
+    	if(isFoodBlockOrWaterBlock(entityPosition, world) == foodorwaterblock){
+    		return isFoodBlockOrWaterBlock(entityPosition, world); 
+    	}
+    	entityPosition = new BlockPosition(this.posX, this.posY, this.posZ + 1);
+    	if(isFoodBlockOrWaterBlock(entityPosition, world) == foodorwaterblock){
+    		return isFoodBlockOrWaterBlock(entityPosition, world); 
+    	}
+    	entityPosition = new BlockPosition(this.posX, this.posY, this.posZ - 1);
+    	if(isFoodBlockOrWaterBlock(entityPosition, world) == foodorwaterblock){
+    		return isFoodBlockOrWaterBlock(entityPosition, world); 
+    	}
+    	return 0; 
+    }
+    
+    public static int isFoodBlockOrWaterBlock(BlockPosition par1blockposition, World world){
+    	//returns 0 for nothing, 1 for food, 2 far water
+    	Block topBlockAsBlock = world.getBlock((int) par1blockposition.x, (int) par1blockposition.y, (int) par1blockposition.z); 
+    	if(topBlockAsBlock.getUnlocalizedName() == References.modId + ":FoodBlock"){
+    		return 1; 
+    	}
+    	if(topBlockAsBlock.getMaterial() == Material.water){
+    		return 2; 
+    	}
+    	return 0; 
+    }
+    
+    @Override
+    public void writeEntityToNBT(NBTTagCompound p_70014_1_){
+    	super.writeEntityToNBT(p_70014_1_);
+    	this.foodStats.writeNBT(p_70014_1_);
+    }
 }
