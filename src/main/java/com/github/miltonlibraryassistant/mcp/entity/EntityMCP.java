@@ -17,6 +17,7 @@ import com.github.miltonlibraryassistant.mcp.entity.searching.BiomeWriteFramewor
 import com.github.miltonlibraryassistant.mcp.entity.searching.BlockPosition;
 import com.github.miltonlibraryassistant.mcp.entity.searching.GridSearchFramework;
 import com.github.miltonlibraryassistant.mcp.entity.searching.QuadrantPoint;
+import com.github.miltonlibraryassistant.mcp.entity.tasks.EntityAISeekFood;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -42,7 +43,8 @@ public class EntityMCP extends EntityCreature {
 	public EntityMCP(World par1World) throws IOException, InstantiationException, IllegalAccessException, ClassNotFoundException {
 		super(par1World);
 		this.tasks.addTask(5, new EntityAIWander(this, 1.0D));
-        this.tasks.addTask(1, new EntityAISwimming(this));
+        this.tasks.addTask(0, new EntityAISwimming(this));
+        this.tasks.addTask(2, new EntityAISeekFood(this));
 		if(!(par1World.isRemote)){
 			try {
 				//Read entities from json
@@ -355,5 +357,9 @@ public class EntityMCP extends EntityCreature {
     public boolean canBreatheUnderwater()
     {
         return true;
+    }
+    
+    public EntityMCPFoodStats getFoodStats(){
+    	return this.foodStats; 
     }
 }

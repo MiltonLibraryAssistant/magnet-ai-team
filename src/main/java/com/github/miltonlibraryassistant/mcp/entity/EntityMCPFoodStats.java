@@ -5,8 +5,8 @@ import net.minecraft.util.DamageSource;
 
 public class EntityMCPFoodStats {
 	
-	private double maxFoodLevel = 20;
-	private double maxThirstLevel = 40;
+	public double maxFoodLevel = 20;
+	public double maxThirstLevel = 40;
     private double foodLevel = 20;
     private int foodTimer = 0;
     private int prevFoodLevel = 20;
@@ -17,7 +17,7 @@ public class EntityMCPFoodStats {
     		foodTimer++; 
     	}
     	else{
-    		//System.out.println("foodlevel = " + foodLevel + "thirstLevel = " + thirstLevel);
+    		System.out.println("foodlevel = " + foodLevel + "thirstLevel = " + thirstLevel);
     		if(foodLevel > 0){
     			foodLevel = foodLevel - 0.5; 
     		}
@@ -54,13 +54,13 @@ public class EntityMCPFoodStats {
      */
     public void writeNBT(NBTTagCompound p_75117_1_)
     {
-        p_75117_1_.setDouble("foodLevel", this.foodLevel);
-        p_75117_1_.setDouble("thirstLevel", this.thirstLevel);
-        p_75117_1_.setInteger("foodTickTimer", this.foodTimer);
+        p_75117_1_.setDouble("foodLevel", foodLevel);
+        p_75117_1_.setDouble("thirstLevel", thirstLevel);
+        p_75117_1_.setInteger("foodTickTimer", foodTimer);
     }
     
     public double getHunger(){
-    	return this.foodLevel; 
+    	return foodLevel; 
     }
     
     public double getThirst(){
@@ -69,13 +69,13 @@ public class EntityMCPFoodStats {
     
     public void setHunger(double par1Int){
     	if(par1Int <= maxFoodLevel){
-        	this.foodLevel = par1Int; 	
+        	foodLevel = par1Int; 	
     	}
     }
     
     public void setThirst(double par2Thirst){
     	if(par2Thirst <= maxThirstLevel){
-        	this.thirstLevel = par2Thirst;	
+        	thirstLevel = par2Thirst;	
     	}
     }
 }
