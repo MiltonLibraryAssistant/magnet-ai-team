@@ -7,12 +7,13 @@ import com.github.miltonlibraryassistant.mcp.entity.searching.GridSearchFramewor
 import com.github.miltonlibraryassistant.mcp.entity.searching.QuadrantPoint;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.world.World;
 
 public class EntityAISeekFood extends EntityAIBase {
 
-	static EntityMCP attachedEntity; 
+	private EntityMCP attachedEntity; 
 	static BlockPosition foodPosition;
 	
 	public EntityAISeekFood(EntityMCP par1Entity){
@@ -22,13 +23,10 @@ public class EntityAISeekFood extends EntityAIBase {
 	
 	@Override
 	public boolean shouldExecute() {
-		//System.out.println(attachedEntity.getFoodStats().getHunger());
-		System.out.println(attachedEntity.worldObj.isRemote);
 		if(attachedEntity.getFoodStats().getHunger() < attachedEntity.getFoodStats().maxFoodLevel){
 			QuadrantPoint quadrant = GridSearchFramework.getQuadrant(attachedEntity.posX, attachedEntity.posZ);
 			World world = attachedEntity.worldObj; 
 			if(isWaterOrFoodInQuadrant(quadrant, world) != null){
-				System.out.println("trying to reach food in quadrant...");
 				return true;
 			}
 		}
@@ -37,12 +35,21 @@ public class EntityAISeekFood extends EntityAIBase {
 	
 	@Override
 	public boolean continueExecuting()
-	{
-		attachedEntity.getNavigator().tryMoveToXYZ(foodPosition.x, foodPosition.y, foodPosition.z, 6);
-		if(attachedEntity.getFoodStats().getHunger() == attachedEntity.getFoodStats().maxFoodLevel){
-			return false; 
+	{	
+		if(shouldExecute()){
+			if(!(isWithinXBlocksOf((int) this.attachedEntity.posX, (int) foodPosition.x, 1) && isWithinXBlocksOf((int) this.attachedEntity.posY, (int) foodPosition.y, 1) && isWithinXBlocksOf((int) this.attachedEntity.posZ, (int) foodPosition.z, 1))){
+				BlockPosition relativeFoodPosition = FindAdjacentAirBlock(attachedEntity.worldObj, foodPosition);
+				if(relativeFoodPosition != null){
+					attachedEntity.getNavigator().tryMoveToXYZ(relativeFoodPosition.x, relativeFoodPosition.y, relativeFoodPosition.z, 6);	
+					System.out.println("tried to move");
+				}		
+			}
+			if(attachedEntity.getFoodStats().getHunger() == attachedEntity.getFoodStats().maxFoodLevel){
+				return false; 
+			}
+			return true; 
 		}
-		return true; 
+		return false; 
 	}
 	
     public static BlockPosition isWaterOrFoodInQuadrant(QuadrantPoint quadrant, World par2World){
@@ -62,4 +69,136 @@ public class EntityAISeekFood extends EntityAIBase {
     	return null; 
     }
 
+    /** returns whether a number is within a certain distance from another number.**/
+    public boolean isWithinXBlocksOf(int posSrc1, int posTarget2, int threshold){
+    	if(posSrc1 <= posTarget2 + threshold && posSrc1 >= posTarget2 - threshold){
+    		return true; 
+    	}
+    	return false; 
+    }
+    
+    public BlockPosition FindAdjacentAirBlock(World world, BlockPosition block){
+    	//iterates through adjacent blocks until it finds one that is air
+    	//there's probably a better way to do this considering this is copy/paste from my entity class
+    	Block blockAsBlock = world.getBlock((int) block.x, (int) block.y, (int) block.z); 
+    	if(blockAsBlock.getMaterial() == Material.air){
+    		return block; 
+    	}
+    	block = new BlockPosition(block.x - 1, block.y, block.z);
+    	blockAsBlock = world.getBlock((int) block.x, (int) block.y, (int) block.z); 
+    	if(blockAsBlock.getMaterial() == Material.air){
+    		return block; 
+    	}
+    	block = new BlockPosition(block.x - 1, block.y - 1, block.z);
+    	blockAsBlock = world.getBlock((int) block.x, (int) block.y, (int) block.z); 
+    	if(blockAsBlock.getMaterial() == Material.air){
+    		return block; 
+    	}
+    	block = new BlockPosition(block.x - 1, block.y - 1, block.z - 1);
+    	blockAsBlock = world.getBlock((int) block.x, (int) block.y, (int) block.z); 
+    	if(blockAsBlock.getMaterial() == Material.air){
+    		return block; 
+    	}
+    	block = new BlockPosition(block.x - 1, block.y - 1, block.z + 1);
+    	blockAsBlock = world.getBlock((int) block.x, (int) block.y, (int) block.z); 
+    	if(blockAsBlock.getMaterial() == Material.air){
+    		return block; 
+    	}
+    	block = new BlockPosition(block.x - 1, block.y + 1, block.z);
+    	blockAsBlock = world.getBlock((int) block.x, (int) block.y, (int) block.z); 
+    	if(blockAsBlock.getMaterial() == Material.air){
+    		return block; 
+    	}
+    	block = new BlockPosition(block.x - 1, block.y + 1, block.z - 1);
+    	blockAsBlock = world.getBlock((int) block.x, (int) block.y, (int) block.z); 
+    	if(blockAsBlock.getMaterial() == Material.air){
+    		return block; 
+    	}
+    	block = new BlockPosition(block.x - 1, block.y + 1, block.z + 1);
+    	blockAsBlock = world.getBlock((int) block.x, (int) block.y, (int) block.z); 
+    	if(blockAsBlock.getMaterial() == Material.air){
+    		return block; 
+    	}
+    	block = new BlockPosition(block.x + 1, block.y, block.z);
+    	blockAsBlock = world.getBlock((int) block.x, (int) block.y, (int) block.z); 
+    	if(blockAsBlock.getMaterial() == Material.air){
+    		return block; 
+    	}
+    	block = new BlockPosition(block.x + 1, block.y - 1, block.z);
+    	blockAsBlock = world.getBlock((int) block.x, (int) block.y, (int) block.z); 
+    	if(blockAsBlock.getMaterial() == Material.air){
+    		return block; 
+    	}
+    	block = new BlockPosition(block.x + 1, block.y - 1, block.z - 1);
+    	blockAsBlock = world.getBlock((int) block.x, (int) block.y, (int) block.z); 
+    	if(blockAsBlock.getMaterial() == Material.air){
+    		return block; 
+    	}
+    	block = new BlockPosition(block.x + 1, block.y - 1, block.z + 1);
+    	blockAsBlock = world.getBlock((int) block.x, (int) block.y, (int) block.z); 
+    	if(blockAsBlock.getMaterial() == Material.air){
+    		return block; 
+    	}
+    	block = new BlockPosition(block.x + 1, block.y + 1, block.z);
+    	blockAsBlock = world.getBlock((int) block.x, (int) block.y, (int) block.z); 
+    	if(blockAsBlock.getMaterial() == Material.air){
+    		return block; 
+    	}
+    	block = new BlockPosition(block.x + 1, block.y + 1, block.z + 1);
+    	blockAsBlock = world.getBlock((int) block.x, (int) block.y, (int) block.z); 
+    	if(blockAsBlock.getMaterial() == Material.air){
+    		return block; 
+    	}
+    	block = new BlockPosition(block.x + 1, block.y + 1, block.z - 1);
+    	blockAsBlock = world.getBlock((int) block.x, (int) block.y, (int) block.z); 
+    	if(blockAsBlock.getMaterial() == Material.air){
+    		return block; 
+    	}
+    	block = new BlockPosition(block.x, block.y - 1, block.z);
+    	blockAsBlock = world.getBlock((int) block.x, (int) block.y, (int) block.z); 
+    	if(blockAsBlock.getMaterial() == Material.air){
+    		return block; 
+    	}
+    	block = new BlockPosition(block.x, block.y - 1, block.z + 1);
+    	blockAsBlock = world.getBlock((int) block.x, (int) block.y, (int) block.z); 
+    	if(blockAsBlock.getMaterial() == Material.air){
+    		return block; 
+    	}
+    	block = new BlockPosition(block.x, block.y - 1, block.z - 1);
+    	blockAsBlock = world.getBlock((int) block.x, (int) block.y, (int) block.z); 
+    	if(blockAsBlock.getMaterial() == Material.air){
+    		return block; 
+    	}
+    	block = new BlockPosition(block.x, block.y + 1, block.z);
+    	blockAsBlock = world.getBlock((int) block.x, (int) block.y, (int) block.z); 
+    	if(blockAsBlock.getMaterial() == Material.air){
+    		return block; 
+    	}
+    	block = new BlockPosition(block.x, block.y + 1, block.z + 1);
+    	blockAsBlock = world.getBlock((int) block.x, (int) block.y, (int) block.z); 
+    	if(blockAsBlock.getMaterial() == Material.air){
+    		return block; 
+    	}
+    	block = new BlockPosition(block.x, block.y + 1, block.z - 1);
+    	blockAsBlock = world.getBlock((int) block.x, (int) block.y, (int) block.z); 
+    	if(blockAsBlock.getMaterial() == Material.air){
+    		return block; 
+    	}
+    	block = new BlockPosition(block.x, block.y, block.z + 1);
+    	blockAsBlock = world.getBlock((int) block.x, (int) block.y, (int) block.z); 
+    	if(blockAsBlock.getMaterial() == Material.air){
+    		return block; 
+    	}
+    	block = new BlockPosition(block.x, block.y, block.z - 1);
+    	blockAsBlock = world.getBlock((int) block.x, (int) block.y, (int) block.z); 
+    	if(blockAsBlock.getMaterial() == Material.air){
+    		return block; 
+    	}
+    	return null; 
+    }
+    
+    public void updateTask()
+    {
+    	shouldExecute();
+    }
 }

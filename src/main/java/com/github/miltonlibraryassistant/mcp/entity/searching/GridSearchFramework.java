@@ -261,7 +261,7 @@ public class GridSearchFramework {
     {
         int k;
 
-        for (k = 20; !par3World.isAirBlock(x, k + 1, z); ++k)
+        for (k = 0; !par3World.isAirBlock(x, k + 1, z); ++k)
         {
             ;
         }

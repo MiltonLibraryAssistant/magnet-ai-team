@@ -111,7 +111,6 @@ public class EntityMCP extends EntityCreature {
     		tickcount++; 
     	}
     	
-    	
     }
     
     protected boolean canDespawn()
