@@ -23,6 +23,7 @@ public class EntityAISeekFood extends EntityAIBase {
 	
 	@Override
 	public boolean shouldExecute() {
+		//eventually this should probably check whether the water level is lower
 		if(attachedEntity.getFoodStats().getHunger() < attachedEntity.getFoodStats().maxFoodLevel){
 			QuadrantPoint quadrant = GridSearchFramework.getQuadrant(attachedEntity.posX, attachedEntity.posZ);
 			World world = attachedEntity.worldObj; 
@@ -219,6 +220,7 @@ public class EntityAISeekFood extends EntityAIBase {
     	return null; 
     }
     
+    @Override
     public void updateTask()
     {
     	shouldExecute();

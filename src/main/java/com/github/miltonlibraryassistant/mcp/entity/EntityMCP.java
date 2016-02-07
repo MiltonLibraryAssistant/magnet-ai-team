@@ -18,6 +18,7 @@ import com.github.miltonlibraryassistant.mcp.entity.searching.BlockPosition;
 import com.github.miltonlibraryassistant.mcp.entity.searching.GridSearchFramework;
 import com.github.miltonlibraryassistant.mcp.entity.searching.QuadrantPoint;
 import com.github.miltonlibraryassistant.mcp.entity.tasks.EntityAISeekFood;
+import com.github.miltonlibraryassistant.mcp.entity.tasks.EntityAISeekFoodLongDistance;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -43,9 +44,12 @@ public class EntityMCP extends EntityCreature {
 	public EntityMCP(World par1World) throws IOException, InstantiationException, IllegalAccessException, ClassNotFoundException {
 		super(par1World);
         this.setSize(0.5F, 0.5F);
-		this.tasks.addTask(5, new EntityAIWander(this, 1.0D));
         this.tasks.addTask(0, new EntityAISwimming(this));
         this.tasks.addTask(2, new EntityAISeekFood(this));
+        this.tasks.addTask(3, new EntityAISeekFoodLongDistance(this));
+		this.tasks.addTask(5, new EntityAIWander(this, 1.0D));
+		//tasks for water will be here eventually, those will be lower priority than food
+		
 		if(!(par1World.isRemote)){
 			try {
 				//Read entities from json
@@ -82,17 +86,21 @@ public class EntityMCP extends EntityCreature {
 		}
 	}
 
+	@Override
     public boolean isAIEnabled()
     {
         return true;
     }
     
+	@Override
     protected void entityInit()
     {
         super.entityInit();
+        //I don't remember why this exists, but I'm going to leave it here in case removing it breaks something. It might be related to NBT
         this.dataWatcher.addObject(16, Byte.valueOf((byte)0));
     }
     
+	@Override
     public void onLivingUpdate(){
     	super.onLivingUpdate(); 
     	if(tickcount == 40){
@@ -113,7 +121,8 @@ public class EntityMCP extends EntityCreature {
     	}
     	
     }
-    
+   
+	@Override
     protected boolean canDespawn()
     {
         return false;
@@ -191,6 +200,7 @@ public class EntityMCP extends EntityCreature {
 		}
 }
 	
+	@Override
 	public boolean attackEntityFrom(DamageSource dmgsrc, float flt){
 		Entity attackerEntity = dmgsrc.getEntity(); 
 		if(attackerEntity != null){
@@ -207,6 +217,7 @@ public class EntityMCP extends EntityCreature {
 		
 	}
 	
+	@Override
 	public void onDeath(DamageSource par1DmgSrc){
     	QuadrantPoint currentQuadrant = GridSearchFramework.getQuadrant(this.posX, this.posZ);
     	try {
@@ -232,6 +243,7 @@ public class EntityMCP extends EntityCreature {
         }
     }
 	
+    @Override
     public void readEntityFromNBT(NBTTagCompound par1NBT)
     {
     	super.readEntityFromNBT(par1NBT);
@@ -371,6 +383,7 @@ public class EntityMCP extends EntityCreature {
     }
     
     //To prevent annoying drowning while testing. 
+    @Override
     public boolean canBreatheUnderwater()
     {
         return true;
