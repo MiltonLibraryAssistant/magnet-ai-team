@@ -42,6 +42,7 @@ public class EntityMCP extends EntityCreature {
 	
 	public EntityMCP(World par1World) throws IOException, InstantiationException, IllegalAccessException, ClassNotFoundException {
 		super(par1World);
+        this.setSize(0.5F, 0.5F);
 		this.tasks.addTask(5, new EntityAIWander(this, 1.0D));
         this.tasks.addTask(0, new EntityAISwimming(this));
         this.tasks.addTask(2, new EntityAISeekFood(this));
@@ -331,6 +332,23 @@ public class EntityMCP extends EntityCreature {
     	if(isFoodBlockOrWaterBlock(entityPosition, world) == foodorwaterblock){
     		return isFoodBlockOrWaterBlock(entityPosition, world); 
     	}
+    	//begin new
+    	entityPosition = new BlockPosition(this.posX + 1, this.posY, this.posZ - 1);
+    	if(isFoodBlockOrWaterBlock(entityPosition, world) == foodorwaterblock){
+    		return isFoodBlockOrWaterBlock(entityPosition, world); 
+    	}
+    	entityPosition = new BlockPosition(this.posX + 1, this.posY, this.posZ + 1);
+    	if(isFoodBlockOrWaterBlock(entityPosition, world) == foodorwaterblock){
+    		return isFoodBlockOrWaterBlock(entityPosition, world); 
+    	}
+    	entityPosition = new BlockPosition(this.posX - 1, this.posY, this.posZ - 1);
+    	if(isFoodBlockOrWaterBlock(entityPosition, world) == foodorwaterblock){
+    		return isFoodBlockOrWaterBlock(entityPosition, world); 
+    	}
+    	entityPosition = new BlockPosition(this.posX - 1, this.posY, this.posZ + 1);
+    	if(isFoodBlockOrWaterBlock(entityPosition, world) == foodorwaterblock){
+    		return isFoodBlockOrWaterBlock(entityPosition, world); 
+    	}
     	return 0; 
     }
     
@@ -360,5 +378,9 @@ public class EntityMCP extends EntityCreature {
     
     public EntityMCPFoodStats getFoodStats(){
     	return this.foodStats; 
+    }
+    
+    public void tryMoveToXYZ(BlockPosition blockposition){
+		this.getNavigator().tryMoveToXYZ(blockposition.x, blockposition.y, blockposition.z, 1);
     }
 }
