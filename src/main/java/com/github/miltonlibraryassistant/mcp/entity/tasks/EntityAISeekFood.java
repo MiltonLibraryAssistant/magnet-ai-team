@@ -79,7 +79,7 @@ public class EntityAISeekFood extends EntityAIBase {
     	return false; 
     }
     
-    public BlockPosition FindAdjacentAirBlock(World world, BlockPosition block){
+    public static BlockPosition FindAdjacentAirBlock(World world, BlockPosition block){
     	//iterates through adjacent blocks until it finds one that is air
     	//there's probably a better way to do this considering this is copy/paste from my entity class
     	Block blockAsBlock = world.getBlock((int) block.x, (int) block.y, (int) block.z); 
@@ -217,6 +217,12 @@ public class EntityAISeekFood extends EntityAIBase {
     	if(blockAsBlock.getMaterial() == Material.air){
     		return block; 
     	}
+    	block = new BlockPosition(block.x, block.y + 1, block.z);
+    	blockAsBlock = world.getBlock((int) block.x, (int) block.y, (int) block.z); 
+    	if(blockAsBlock.getMaterial() == Material.air){
+    		return block; 
+    	}
+    	System.out.println("returned null");
     	return null; 
     }
     

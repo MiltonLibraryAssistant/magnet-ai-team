@@ -34,8 +34,20 @@ public class GridSearchFramework {
 	
 	public static QuadrantPoint getQuadrant(double posX, double posZ){
 		//Dividing by 20 then subtracting the remainder to get the quadrant. 
-		double XPosRounded = Math.floor((posX / 20)); 
-		double ZPosRounded = Math.floor((posZ / 20)); 
+		double XPosRounded = 0;
+		double ZPosRounded = 0; 
+		if(posX < 0){
+			XPosRounded = Math.ceil((posX / 20)); 	
+		}
+		else{
+			XPosRounded = Math.floor((posX / 20));
+		}
+		if(posZ < 0){
+			ZPosRounded = Math.ceil((posZ / 20)); 	
+		}
+		else{
+			ZPosRounded = Math.floor((posZ / 20));
+		}
 		return new QuadrantPoint(XPosRounded, ZPosRounded); 
 	}
 	
@@ -261,7 +273,7 @@ public class GridSearchFramework {
     {
         int k;
 
-        for (k = 0; !par3World.isAirBlock(x, k + 1, z); ++k)
+        for (k = 1; !par3World.isAirBlock(x, k + 1, z); ++k)
         {
             ;
         }
@@ -274,6 +286,7 @@ public class GridSearchFramework {
     	//returns 0 for nothing, 1 for food, 2 far water
     	BlockPosition topBlock = getTopBlock(x, z, world);
     	Block topBlockAsBlock = world.getBlock((int) topBlock.x, (int) topBlock.y, (int) topBlock.z); 
+    	//System.out.println((int) topBlock.x + " " + (int) topBlock.y + " " + (int) topBlock.z);
     	if(topBlockAsBlock.getUnlocalizedName() == References.modId + ":FoodBlock"){
     		return 1; 
     	}

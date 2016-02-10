@@ -24,6 +24,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIAvoidEntity;
 import net.minecraft.entity.ai.EntityAISwimming;
 import net.minecraft.entity.ai.EntityAIWander;
@@ -44,6 +45,7 @@ public class EntityMCP extends EntityCreature {
 	public EntityMCP(World par1World) throws IOException, InstantiationException, IllegalAccessException, ClassNotFoundException {
 		super(par1World);
         this.setSize(0.5F, 0.5F);
+        
         this.tasks.addTask(0, new EntityAISwimming(this));
         this.tasks.addTask(2, new EntityAISeekFood(this));
         this.tasks.addTask(3, new EntityAISeekFoodLongDistance(this));
@@ -395,5 +397,12 @@ public class EntityMCP extends EntityCreature {
     
     public void tryMoveToXYZ(BlockPosition blockposition){
 		this.getNavigator().tryMoveToXYZ(blockposition.x, blockposition.y, blockposition.z, 1);
+    }
+    
+    @Override
+    protected void applyEntityAttributes(){
+    	super.applyEntityAttributes();
+    	
+    	getEntityAttribute(SharedMonsterAttributes.followRange).setBaseValue(200.0D);
     }
 }
