@@ -14,10 +14,13 @@ import com.github.miltonlibraryassistant.mcp.entity.EntityMCP;
 import com.github.miltonlibraryassistant.mcp.entity.searching.BlockPosition;
 import com.github.miltonlibraryassistant.mcp.entity.searching.GridSearchFramework;
 import com.github.miltonlibraryassistant.mcp.entity.searching.QuadrantPoint;
+import com.github.miltonlibraryassistant.mcp.entity.searching.pathing.QuadrantPathFind;
+import com.github.miltonlibraryassistant.mcp.entity.searching.pathing.QuadrantPathPoint;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.ai.EntityAIAvoidEntity;
 import net.minecraft.entity.ai.EntityAIBase;
+import net.minecraft.pathfinding.PathEntity;
 import net.minecraft.world.World;
 
 public class EntityAISeekFoodLongDistance extends EntityAIBase {
@@ -97,8 +100,11 @@ public class EntityAISeekFoodLongDistance extends EntityAIBase {
 				}
 				
 				if(quadrantSearch != null){
+					PathEntity pathOfQuadrants = QuadrantPathFind.getPath((int) entityQuadrantPosition.X, (int) entityQuadrantPosition.Z, (int) quadrantSearch.X, (int) quadrantSearch.Z, attachedEntity.worldObj);
+					QuadrantPathPoint firstPoint = (QuadrantPathPoint) pathOfQuadrants.getPathPointFromIndex(0);
+					QuadrantPoint firstQuadrant = new QuadrantPoint(firstPoint.xCoord, firstPoint.zCoord);
 					//tries to path to valid quadrant center if one is found
-					BlockPosition pathTo = GridSearchFramework.getQuadrantCenter(quadrantSearch.X, quadrantSearch.Z, this.attachedEntity.worldObj); 
+					BlockPosition pathTo = GridSearchFramework.getQuadrantCenter(firstQuadrant.X, firstQuadrant.Z, this.attachedEntity.worldObj); 
 					BlockPosition pathToAir = EntityAISeekFood.FindAdjacentAirBlock(attachedEntity.worldObj, pathTo); 
 					System.out.println(pathToAir.x + " " + pathToAir.y + " " + pathToAir.z);
 					if(pathToAir != null){

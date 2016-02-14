@@ -8,7 +8,6 @@ import net.minecraft.world.gen.feature.WorldGenerator;
 
 public class WorldGenFoodBlock extends WorldGenerator
 {
-    private static final String __OBFID = "CL_00000428";
 
     //copied from the pumpkin world gen with a few things changed about 
     public boolean generate(World p_76484_1_, Random p_76484_2_, int p_76484_3_, int p_76484_4_, int p_76484_5_)

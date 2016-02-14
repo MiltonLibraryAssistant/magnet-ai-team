@@ -44,7 +44,7 @@ public class EntityMCP extends EntityCreature {
 	
 	public EntityMCP(World par1World) throws IOException, InstantiationException, IllegalAccessException, ClassNotFoundException {
 		super(par1World);
-        this.setSize(0.5F, 0.5F);
+        this.setSize(0.7F, 1.0F);
         
         this.tasks.addTask(0, new EntityAISwimming(this));
         this.tasks.addTask(2, new EntityAISeekFood(this));
