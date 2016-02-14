@@ -86,141 +86,141 @@ public class EntityAISeekFood extends EntityAIBase {
     	if(blockAsBlock.getMaterial() == Material.air){
     		return block; 
     	}
-    	block = new BlockPosition(block.x - 1, block.y, block.z);
-    	blockAsBlock = world.getBlock((int) block.x, (int) block.y, (int) block.z); 
+    	BlockPosition block2 = new BlockPosition(block.x - 1, block.y, block.z);
+    	blockAsBlock = world.getBlock((int) block2.x, (int) block2.y, (int) block2.z); 
     	if(blockAsBlock.getMaterial() == Material.air){
-    		return block; 
+    		return block2; 
     	}
-    	block = new BlockPosition(block.x - 1, block.y - 1, block.z);
-    	blockAsBlock = world.getBlock((int) block.x, (int) block.y, (int) block.z); 
+    	block2 = new BlockPosition(block.x - 1, block.y - 1, block.z);
+    	blockAsBlock = world.getBlock((int) block2.x, (int) block2.y, (int) block2.z); 
     	if(blockAsBlock.getMaterial() == Material.air){
-    		return block; 
+    		return block2; 
     	}
-    	block = new BlockPosition(block.x - 1, block.y - 1, block.z - 1);
-    	blockAsBlock = world.getBlock((int) block.x, (int) block.y, (int) block.z); 
+    	block2 = new BlockPosition(block.x - 1, block.y - 1, block.z - 1);
+    	blockAsBlock = world.getBlock((int) block2.x, (int) block2.y, (int) block2.z); 
     	if(blockAsBlock.getMaterial() == Material.air){
-    		return block; 
+    		return block2; 
     	}
-    	block = new BlockPosition(block.x - 1, block.y - 1, block.z + 1);
-    	blockAsBlock = world.getBlock((int) block.x, (int) block.y, (int) block.z); 
+    	block2 = new BlockPosition(block.x - 1, block.y - 1, block.z + 1);
+    	blockAsBlock = world.getBlock((int) block2.x, (int) block2.y, (int) block2.z); 
     	if(blockAsBlock.getMaterial() == Material.air){
-    		return block; 
+    		return block2; 
     	}
-    	block = new BlockPosition(block.x - 1, block.y + 1, block.z);
-    	blockAsBlock = world.getBlock((int) block.x, (int) block.y, (int) block.z); 
+    	block2 = new BlockPosition(block.x - 1, block.y + 1, block.z);
+    	blockAsBlock = world.getBlock((int) block2.x, (int) block2.y, (int) block2.z); 
     	if(blockAsBlock.getMaterial() == Material.air){
-    		return block; 
+    		return block2; 
     	}
-    	block = new BlockPosition(block.x - 1, block.y + 1, block.z - 1);
-    	blockAsBlock = world.getBlock((int) block.x, (int) block.y, (int) block.z); 
+    	block2 = new BlockPosition(block.x - 1, block.y + 1, block.z - 1);
+    	blockAsBlock = world.getBlock((int) block2.x, (int) block2.y, (int) block2.z); 
     	if(blockAsBlock.getMaterial() == Material.air){
-    		return block; 
+    		return block2; 
     	}
-    	block = new BlockPosition(block.x - 1, block.y + 1, block.z + 1);
-    	blockAsBlock = world.getBlock((int) block.x, (int) block.y, (int) block.z); 
+    	block2 = new BlockPosition(block.x - 1, block.y + 1, block.z + 1);
+    	blockAsBlock = world.getBlock((int) block2.x, (int) block2.y, (int) block2.z); 
     	if(blockAsBlock.getMaterial() == Material.air){
-    		return block; 
+    		return block2; 
     	}
-    	block = new BlockPosition(block.x + 1, block.y, block.z);
-    	blockAsBlock = world.getBlock((int) block.x, (int) block.y, (int) block.z); 
+    	block2 = new BlockPosition(block.x + 1, block.y, block.z);
+    	blockAsBlock = world.getBlock((int) block2.x, (int) block2.y, (int) block2.z); 
     	if(blockAsBlock.getMaterial() == Material.air){
-    		return block; 
+    		return block2; 
     	}
-    	block = new BlockPosition(block.x + 1, block.y - 1, block.z);
-    	blockAsBlock = world.getBlock((int) block.x, (int) block.y, (int) block.z); 
+    	block2 = new BlockPosition(block.x + 1, block.y - 1, block.z);
+    	blockAsBlock = world.getBlock((int) block2.x, (int) block2.y, (int) block2.z); 
     	if(blockAsBlock.getMaterial() == Material.air){
-    		return block; 
+    		return block2; 
     	}
-    	block = new BlockPosition(block.x + 1, block.y - 1, block.z - 1);
-    	blockAsBlock = world.getBlock((int) block.x, (int) block.y, (int) block.z); 
+    	block2 = new BlockPosition(block.x + 1, block.y - 1, block.z - 1);
+    	blockAsBlock = world.getBlock((int) block2.x, (int) block2.y, (int) block2.z); 
     	if(blockAsBlock.getMaterial() == Material.air){
-    		return block; 
+    		return block2; 
     	}
-    	block = new BlockPosition(block.x + 1, block.y - 1, block.z + 1);
-    	blockAsBlock = world.getBlock((int) block.x, (int) block.y, (int) block.z); 
+    	block2 = new BlockPosition(block.x + 1, block.y - 1, block.z + 1);
+    	blockAsBlock = world.getBlock((int) block2.x, (int) block2.y, (int) block2.z); 
     	if(blockAsBlock.getMaterial() == Material.air){
-    		return block; 
+    		return block2; 
     	}
-    	block = new BlockPosition(block.x + 1, block.y + 1, block.z);
-    	blockAsBlock = world.getBlock((int) block.x, (int) block.y, (int) block.z); 
+    	block2 = new BlockPosition(block.x + 1, block.y + 1, block.z);
+    	blockAsBlock = world.getBlock((int) block2.x, (int) block2.y, (int) block2.z); 
     	if(blockAsBlock.getMaterial() == Material.air){
-    		return block; 
+    		return block2; 
     	}
-    	block = new BlockPosition(block.x + 1, block.y + 1, block.z + 1);
-    	blockAsBlock = world.getBlock((int) block.x, (int) block.y, (int) block.z); 
+    	block2 = new BlockPosition(block.x + 1, block.y + 1, block.z + 1);
+    	blockAsBlock = world.getBlock((int) block2.x, (int) block2.y, (int) block2.z); 
     	if(blockAsBlock.getMaterial() == Material.air){
-    		return block; 
+    		return block2; 
     	}
-    	block = new BlockPosition(block.x + 1, block.y + 1, block.z - 1);
-    	blockAsBlock = world.getBlock((int) block.x, (int) block.y, (int) block.z); 
+    	block2 = new BlockPosition(block.x + 1, block.y + 1, block.z - 1);
+    	blockAsBlock = world.getBlock((int) block2.x, (int) block2.y, (int) block2.z); 
     	if(blockAsBlock.getMaterial() == Material.air){
-    		return block; 
+    		return block2; 
     	}
-    	block = new BlockPosition(block.x, block.y - 1, block.z);
-    	blockAsBlock = world.getBlock((int) block.x, (int) block.y, (int) block.z); 
+    	block2 = new BlockPosition(block.x, block.y - 1, block.z);
+    	blockAsBlock = world.getBlock((int) block2.x, (int) block2.y, (int) block2.z); 
     	if(blockAsBlock.getMaterial() == Material.air){
-    		return block; 
+    		return block2; 
     	}
-    	block = new BlockPosition(block.x, block.y - 1, block.z + 1);
-    	blockAsBlock = world.getBlock((int) block.x, (int) block.y, (int) block.z); 
+    	block2 = new BlockPosition(block.x, block.y - 1, block.z + 1);
+    	blockAsBlock = world.getBlock((int) block2.x, (int) block2.y, (int) block2.z); 
     	if(blockAsBlock.getMaterial() == Material.air){
-    		return block; 
+    		return block2; 
     	}
-    	block = new BlockPosition(block.x, block.y - 1, block.z - 1);
-    	blockAsBlock = world.getBlock((int) block.x, (int) block.y, (int) block.z); 
+    	block2 = new BlockPosition(block.x, block.y - 1, block.z - 1);
+    	blockAsBlock = world.getBlock((int) block2.x, (int) block2.y, (int) block2.z); 
     	if(blockAsBlock.getMaterial() == Material.air){
-    		return block; 
+    		return block2; 
     	}
-    	block = new BlockPosition(block.x, block.y + 1, block.z);
-    	blockAsBlock = world.getBlock((int) block.x, (int) block.y, (int) block.z); 
+    	block2 = new BlockPosition(block.x, block.y + 1, block.z);
+    	blockAsBlock = world.getBlock((int) block2.x, (int) block2.y, (int) block2.z); 
     	if(blockAsBlock.getMaterial() == Material.air){
-    		return block; 
+    		return block2; 
     	}
-    	block = new BlockPosition(block.x, block.y + 1, block.z + 1);
-    	blockAsBlock = world.getBlock((int) block.x, (int) block.y, (int) block.z); 
+    	block2 = new BlockPosition(block.x, block.y + 1, block.z + 1);
+    	blockAsBlock = world.getBlock((int) block2.x, (int) block2.y, (int) block2.z); 
     	if(blockAsBlock.getMaterial() == Material.air){
-    		return block; 
+    		return block2; 
     	}
-    	block = new BlockPosition(block.x, block.y + 1, block.z - 1);
-    	blockAsBlock = world.getBlock((int) block.x, (int) block.y, (int) block.z); 
+    	block2 = new BlockPosition(block.x, block.y + 1, block.z - 1);
+    	blockAsBlock = world.getBlock((int) block2.x, (int) block2.y, (int) block2.z); 
     	if(blockAsBlock.getMaterial() == Material.air){
-    		return block; 
+    		return block2; 
     	}
-    	block = new BlockPosition(block.x, block.y, block.z + 1);
-    	blockAsBlock = world.getBlock((int) block.x, (int) block.y, (int) block.z); 
+    	block2 = new BlockPosition(block.x, block.y, block.z + 1);
+    	blockAsBlock = world.getBlock((int) block2.x, (int) block2.y, (int) block2.z); 
     	if(blockAsBlock.getMaterial() == Material.air){
-    		return block; 
+    		return block2; 
     	}
-    	block = new BlockPosition(block.x, block.y, block.z - 1);
-    	blockAsBlock = world.getBlock((int) block.x, (int) block.y, (int) block.z); 
+    	block2 = new BlockPosition(block.x, block.y, block.z - 1);
+    	blockAsBlock = world.getBlock((int) block2.x, (int) block2.y, (int) block2.z); 
     	if(blockAsBlock.getMaterial() == Material.air){
-    		return block; 
+    		return block2; 
     	}
     	//begin new
-    	block = new BlockPosition(block.x + 1, block.y, block.z - 1);
-    	blockAsBlock = world.getBlock((int) block.x, (int) block.y, (int) block.z); 
+    	block2 = new BlockPosition(block.x + 1, block.y, block.z - 1);
+    	blockAsBlock = world.getBlock((int) block2.x, (int) block2.y, (int) block2.z); 
     	if(blockAsBlock.getMaterial() == Material.air){
-    		return block; 
+    		return block2; 
     	}
-    	block = new BlockPosition(block.x + 1, block.y, block.z + 1);
-    	blockAsBlock = world.getBlock((int) block.x, (int) block.y, (int) block.z); 
+    	block2 = new BlockPosition(block.x + 1, block.y, block.z + 1);
+    	blockAsBlock = world.getBlock((int) block2.x, (int) block2.y, (int) block2.z); 
     	if(blockAsBlock.getMaterial() == Material.air){
-    		return block; 
+    		return block2; 
     	}
-    	block = new BlockPosition(block.x - 1, block.y, block.z - 1);
-    	blockAsBlock = world.getBlock((int) block.x, (int) block.y, (int) block.z); 
+    	block2 = new BlockPosition(block.x - 1, block.y, block.z - 1);
+    	blockAsBlock = world.getBlock((int) block2.x, (int) block2.y, (int) block2.z); 
     	if(blockAsBlock.getMaterial() == Material.air){
-    		return block; 
+    		return block2; 
     	}
-    	block = new BlockPosition(block.x - 1, block.y, block.z + 1);
-    	blockAsBlock = world.getBlock((int) block.x, (int) block.y, (int) block.z); 
+    	block2 = new BlockPosition(block.x - 1, block.y, block.z + 1);
+    	blockAsBlock = world.getBlock((int) block2.x, (int) block2.y, (int) block2.z); 
     	if(blockAsBlock.getMaterial() == Material.air){
-    		return block; 
+    		return block2; 
     	}
-    	block = new BlockPosition(block.x, block.y + 1, block.z);
-    	blockAsBlock = world.getBlock((int) block.x, (int) block.y, (int) block.z); 
+    	block2 = new BlockPosition(block.x, block.y + 1, block.z);
+    	blockAsBlock = world.getBlock((int) block2.x, (int) block2.y, (int) block2.z); 
     	if(blockAsBlock.getMaterial() == Material.air){
-    		return block; 
+    		return block2; 
     	}
     	System.out.println("returned null");
     	return null; 

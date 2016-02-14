@@ -151,6 +151,7 @@ public class EntityAISeekFoodLongDistance extends EntityAIBase {
 						BlockPosition pathToAir = EntityAISeekFood.FindAdjacentAirBlock(attachedEntity.worldObj, pathTo); 
 						System.out.println(pathToAir.x + " " + pathToAir.y + " " + pathToAir.z);
 						if(pathToAir != null){
+							System.out.println("trying to execute distance pathfinding");
 							this.attachedEntity.tryMoveToXYZ(pathToAir);	
 						}
 					}
