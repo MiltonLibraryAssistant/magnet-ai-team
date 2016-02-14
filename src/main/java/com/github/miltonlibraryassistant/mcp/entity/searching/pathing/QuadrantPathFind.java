@@ -41,7 +41,7 @@ public class QuadrantPathFind {
 	 * @throws IOException 
 	 * @throws ParseException **/ 
 	public static PathEntity generateChildNodes(int targeterXCoord, int targeterZCoord, int targetXCoord, int targetZCoord, World world) throws IOException, ParseException{
-		while((openPointsLength > 0 &&  incrementing <= 90)|| incrementing == 0){
+		while((openPointsLength > 0 &&  incrementing <= 100)|| incrementing == 0){
 			incrementing++; 
 			QuadrantPathPoint prevNode = new QuadrantPathPoint(targeterXCoord, targeterZCoord);
 			QuadrantPathPoint target = new QuadrantPathPoint(targetXCoord, targetZCoord); 
