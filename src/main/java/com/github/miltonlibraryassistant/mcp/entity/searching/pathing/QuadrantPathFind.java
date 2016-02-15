@@ -21,82 +21,90 @@ import com.github.miltonlibraryassistant.mcp.entity.searching.GridSearchFramewor
 
 public class QuadrantPathFind {
 
-	public static QuadrantPathPoint[] arrayOpenPoints = new QuadrantPathPoint[1000]; 
-	public static QuadrantPathPoint[] arrayClosedPoints = new QuadrantPathPoint[1000]; 
+	public static QuadrantPathPoint[] arrayOpenPoints = new QuadrantPathPoint[0]; 
+	public static QuadrantPathPoint[] arrayClosedPoints = new QuadrantPathPoint[0]; 
 	public static int openPointsLength = 0;
 	public static int closedPointsLength = 0;
 	public static int incrementing = 0; 
  
 	public static PathEntity getPath(int targeterXCoord, int targeterZCoord, int targetXCoord, int targetZCoord, World world) throws IOException, ParseException{
-		Arrays.fill(arrayOpenPoints, null);
-		Arrays.fill(arrayClosedPoints, null);
+		//Arrays.fill(arrayOpenPoints, null);
+		//Arrays.fill(arrayClosedPoints, null);
 		openPointsLength = 0; 
 		closedPointsLength = 0; 
 		incrementing = 0; 
-		PathEntity pathTo = generateChildNodes(targeterXCoord, targeterZCoord, targetXCoord, targetZCoord, world); 
+		PathEntity pathTo = generateChildNodes(new QuadrantPathPoint(targeterXCoord, targeterZCoord), targetXCoord, targetZCoord, world); 
 		return pathTo; 
 	}
 	
 	/**Searches the 8 adjacent quadrants to the given quadrant, and adds them to the open list. If they are the target, returns a full path.
 	 * @throws IOException 
 	 * @throws ParseException **/ 
-	public static PathEntity generateChildNodes(int targeterXCoord, int targeterZCoord, int targetXCoord, int targetZCoord, World world) throws IOException, ParseException{
+	public static PathEntity generateChildNodes(QuadrantPathPoint targeter, int targetXCoord, int targetZCoord, World world) throws IOException, ParseException{
 		while((openPointsLength > 0 &&  incrementing <= 100)|| incrementing == 0){
 			incrementing++; 
-			QuadrantPathPoint prevNode = new QuadrantPathPoint(targeterXCoord, targeterZCoord);
+			QuadrantPathPoint prevNode = targeter;
 			QuadrantPathPoint target = new QuadrantPathPoint(targetXCoord, targetZCoord); 
 			
-			QuadrantPathPoint x = new QuadrantPathPoint(targeterXCoord - 1, targeterZCoord + 1); 
+			QuadrantPathPoint x = new QuadrantPathPoint(targeter.xCoord - 1, targeter.zCoord + 1); 
 			if(x.equals(target)){
+				x.previous = prevNode; 
 				PathEntity returnValue = finish(x); 
 				return returnValue;  
 			}
 			addPointToList(x.xCoord, x.yCoord, x.zCoord, prevNode, world, target); 
 			
-			x = new QuadrantPathPoint(targeterXCoord, targeterZCoord + 1);
+			x = new QuadrantPathPoint(targeter.xCoord, targeter.zCoord + 1);
 			if(x.equals(target)){
+				x.previous = prevNode; 
 				PathEntity returnValue = finish(x); 
 				return returnValue;  
 			}
 			addPointToList(x.xCoord, x.yCoord, x.zCoord, prevNode, world, target); 
 			
-			x = new QuadrantPathPoint(targeterXCoord + 1, targeterZCoord + 1); 
+			x = new QuadrantPathPoint(targeter.xCoord + 1, targeter.zCoord + 1); 
 			if(x.equals(target)){
+				x.previous = prevNode; 
 				PathEntity returnValue = finish(x); 
 				return returnValue; 
 			}
 			addPointToList(x.xCoord, x.yCoord, x.zCoord, prevNode, world, target); 
 			
-			x = new QuadrantPathPoint(targeterXCoord - 1, targeterZCoord);
+			x = new QuadrantPathPoint(targeter.xCoord - 1, targeter.zCoord);
 			if(x.equals(target)){
+				x.previous = prevNode; 
 				PathEntity returnValue = finish(x); 
 				return returnValue; 
 			}
 			addPointToList(x.xCoord, x.yCoord, x.zCoord, prevNode, world, target); 
 			
-			x = new QuadrantPathPoint(targeterXCoord + 1, targeterZCoord);
+			x = new QuadrantPathPoint(targeter.xCoord + 1, targeter.zCoord);
 			if(x.equals(target)){
+				x.previous = prevNode; 
 				PathEntity returnValue = finish(x); 
 				return returnValue; 
 			}
 			addPointToList(x.xCoord, x.yCoord, x.zCoord, prevNode, world, target); 
 			
-			x = new QuadrantPathPoint(targeterXCoord - 1, targeterZCoord - 1);
+			x = new QuadrantPathPoint(targeter.xCoord - 1, targeter.zCoord - 1);
 			if(x.equals(target)){
+				x.previous = prevNode; 
 				PathEntity returnValue = finish(x); 
 				return returnValue; 
 			}
 			addPointToList(x.xCoord, x.yCoord, x.zCoord, prevNode, world, target); 
 			
-			x = new QuadrantPathPoint(targeterXCoord, targeterZCoord - 1);
+			x = new QuadrantPathPoint(targeter.xCoord, targeter.zCoord - 1);
 			if(x.equals(target)){
+				x.previous = prevNode; 
 				PathEntity returnValue = finish(x); 
 				return returnValue; 
 			}
 			addPointToList(x.xCoord, x.yCoord, x.zCoord, prevNode, world, target); 
 			
-			x = new QuadrantPathPoint(targeterXCoord + 1, targeterZCoord - 1);
+			x = new QuadrantPathPoint(targeter.xCoord + 1, targeter.zCoord - 1);
 			if(x.equals(target)){
+				x.previous = prevNode; 
 				PathEntity returnValue = finish(x); 
 				return returnValue; 
 			}
@@ -104,7 +112,7 @@ public class QuadrantPathFind {
 			
 			QuadrantPathPoint greatestF = pickQuadrantWithLeastCost(); 
 			if(greatestF != null){
-				return generateChildNodes(greatestF.xCoord, greatestF.zCoord, targetXCoord, targetZCoord, world);
+				return generateChildNodes(greatestF, targetXCoord, targetZCoord, world);
 
 			}
 		}
@@ -159,8 +167,8 @@ public class QuadrantPathFind {
 		/**Tests whether this node has been checked previously with a lower f, and if so, exits the method.**/ 
 		for(int a = 0; a < closedPointsLength; a++ ){
 			if (arrayClosedPoints[a] != null){
-				if(newPathPoint.equals(arrayClosedPoints[a])){
-					if(newPathPoint.CurrentCost > arrayClosedPoints[a].CurrentCost){ 
+				if(newPathPoint.xCoord == (arrayClosedPoints[a]).xCoord && newPathPoint.zCoord == (arrayClosedPoints[a]).zCoord){
+					if(newPathPoint.CurrentCost >= arrayClosedPoints[a].CurrentCost){ 
 						return; 
 					}
 				}
@@ -168,8 +176,8 @@ public class QuadrantPathFind {
 		}
 		for(int a = 0; a < openPointsLength; a++ ){
 			if(arrayOpenPoints[a] != null){
-				if(newPathPoint.equals(arrayOpenPoints[a])){
-					if(newPathPoint.CurrentCost > arrayOpenPoints[a].CurrentCost){
+				if(newPathPoint.xCoord == (arrayOpenPoints[a]).xCoord && newPathPoint.zCoord == (arrayOpenPoints[a]).zCoord){
+					if(newPathPoint.CurrentCost >= arrayOpenPoints[a].CurrentCost){
 						return; 
 					}
 				}
@@ -179,8 +187,7 @@ public class QuadrantPathFind {
 			}
 		}
 			
-		
-		arrayOpenPoints[openPointsLength] = newPathPoint; 
+		arrayOpenPoints = ArrayUtils.add(arrayOpenPoints, newPathPoint);
 		openPointsLength++;
 	}
 	
@@ -205,6 +212,8 @@ public class QuadrantPathFind {
             --i;
         }
         
+        arrayOpenPoints = new QuadrantPathPoint[0];
+        arrayClosedPoints = new QuadrantPathPoint[0];
         return new PathEntity(apathpoint);
 		
 	}
@@ -227,9 +236,9 @@ public class QuadrantPathFind {
 			}
 		}
 		QuadrantPathPoint greatestF = arrayOpenPoints[ArrayID]; 
-		arrayClosedPoints[closedPointsLength] = greatestF;  
+		arrayClosedPoints = ArrayUtils.add(arrayClosedPoints, greatestF);  
 		closedPointsLength++;
-		ArrayUtils.removeElement(arrayOpenPoints, ArrayID); 
+		arrayOpenPoints = ArrayUtils.removeElement(arrayOpenPoints, greatestF); 
 		openPointsLength--; 
 		return greatestF;  
 

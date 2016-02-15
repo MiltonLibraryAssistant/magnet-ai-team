@@ -144,7 +144,7 @@ public class EntityAISeekFoodLongDistance extends EntityAIBase {
 				if(quadrantSearch != null){
 					PathEntity pathOfQuadrants = QuadrantPathFind.getPath((int) entityQuadrantPosition.X, (int) entityQuadrantPosition.Z, (int) quadrantSearch.X, (int) quadrantSearch.Z, attachedEntity.worldObj);
 					if(pathOfQuadrants != null){
-						QuadrantPathPoint firstPoint = (QuadrantPathPoint) pathOfQuadrants.getPathPointFromIndex(0);
+						QuadrantPathPoint firstPoint = (QuadrantPathPoint) pathOfQuadrants.getPathPointFromIndex(1);
 						QuadrantPoint firstQuadrant = new QuadrantPoint(firstPoint.xCoord, firstPoint.zCoord);
 						//tries to path to valid quadrant center if one is found
 						BlockPosition pathTo = GridSearchFramework.getQuadrantCenter(firstQuadrant.X, firstQuadrant.Z, this.attachedEntity.worldObj); 
