@@ -49,7 +49,7 @@ public class EntityMCP extends EntityCreature {
         this.tasks.addTask(0, new EntityAISwimming(this));
         this.tasks.addTask(2, new EntityAISeekFood(this));
         this.tasks.addTask(3, new EntityAISeekFoodLongDistance(this));
-		//this.tasks.addTask(5, new EntityAIWander(this, 1.0D));
+		this.tasks.addTask(5, new EntityAIWander(this, 1.0D));
 		//tasks for water will be here eventually, those will be lower priority than food
 		
 		if(!(par1World.isRemote)){

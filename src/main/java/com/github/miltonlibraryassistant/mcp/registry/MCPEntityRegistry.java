@@ -1,6 +1,8 @@
 package com.github.miltonlibraryassistant.mcp.registry;
 
 import com.github.miltonlibraryassistant.mcp.MainMCP;
+import com.github.miltonlibraryassistant.mcp.biome.BiomeGenSafeBiome;
+import com.github.miltonlibraryassistant.mcp.biome.BiomeRegistry;
 import com.github.miltonlibraryassistant.mcp.entity.EntityAggressorMCP;
 import com.github.miltonlibraryassistant.mcp.entity.EntityMCP;
 
@@ -27,7 +29,7 @@ public class MCPEntityRegistry {
 		int entityId = EntityRegistry.findGlobalUniqueEntityId(); 
 		EntityRegistry.registerGlobalEntityID(entityClass, entityName, entityId); 
 		EntityRegistry.registerModEntity(entityClass, entityName, entityId, MainMCP.modInstance, 128, 2, true);
-		EntityRegistry.addSpawn(entityClass, 2, 0, 2, EnumCreatureType.creature, BiomeGenBase.desert);
+		EntityRegistry.addSpawn(entityClass, 2, 0, 2, EnumCreatureType.creature);
 		
 		createEgg(entityId, solidColor, spotColor); 
 		
@@ -38,7 +40,7 @@ public class MCPEntityRegistry {
 		int entityId = EntityRegistry.findGlobalUniqueEntityId(); 
 		EntityRegistry.registerGlobalEntityID(entityClass, entityName, entityId); 
 		EntityRegistry.registerModEntity(entityClass, entityName, entityId, MainMCP.modInstance, 128, 2, true);
-		EntityRegistry.addSpawn(entityClass, 2, 0, 2, EnumCreatureType.monster, BiomeGenBase.desert);
+		EntityRegistry.addSpawn(entityClass, 2, 0, 2, EnumCreatureType.monster, BiomeGenBase.forest);
 		
 		createEgg(entityId, solidColor, spotColor); 
 		
