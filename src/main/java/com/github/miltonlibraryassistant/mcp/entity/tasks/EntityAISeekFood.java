@@ -58,10 +58,9 @@ public class EntityAISeekFood extends EntityAIBase {
     	quadrantCorner.x = quadrantCorner.x - 10; 
     	quadrantCorner.z = quadrantCorner.z - 10; 
     	for(int i = 0; i <= 20; i++){
-    		int j = 0;
-    		for(j = 0; j <= 20; j++){
+    		for(int j = 0; j <= 20; j++){
 	    		BlockPosition topBlock = GridSearchFramework.getTopBlock((int) quadrantCorner.x + j, (int) quadrantCorner.z + i, par2World);
-	        	Block topBlockAsBlock = par2World.getBlock((int) topBlock.x, (int) topBlock.y, (int) topBlock.z); 
+	        	Block topBlockAsBlock = par2World.getBlock((int) topBlock.x, (int) topBlock.y - 1, (int) topBlock.z); 
 	    		if(topBlockAsBlock.getUnlocalizedName() == References.modId + ":FoodBlock"){
 	    			foodPosition = topBlock;
 	    			return topBlock; 

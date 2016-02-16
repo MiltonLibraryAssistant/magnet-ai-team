@@ -49,7 +49,7 @@ public class EntityMCP extends EntityCreature {
         this.tasks.addTask(0, new EntityAISwimming(this));
         this.tasks.addTask(2, new EntityAISeekFood(this));
         this.tasks.addTask(3, new EntityAISeekFoodLongDistance(this));
-		this.tasks.addTask(5, new EntityAIWander(this, 1.0D));
+		//this.tasks.addTask(5, new EntityAIWander(this, 1.0D));
 		//tasks for water will be here eventually, those will be lower priority than food
 		
 		if(!(par1World.isRemote)){
@@ -104,7 +104,6 @@ public class EntityMCP extends EntityCreature {
     
 	@Override
     public void onLivingUpdate(){
-    	super.onLivingUpdate(); 
     	if(tickcount == 40){
         	QuadrantPoint currentQuadrant = GridSearchFramework.getQuadrant(this.posX, this.posZ);
         	try {
@@ -121,7 +120,7 @@ public class EntityMCP extends EntityCreature {
     	}else{
     		tickcount++; 
     	}
-    	
+    	super.onLivingUpdate(); 
     }
    
 	@Override
@@ -250,6 +249,10 @@ public class EntityMCP extends EntityCreature {
     {
     	super.readEntityFromNBT(par1NBT);
     	this.foodStats.readNBT(par1NBT);
+        if (par1NBT.hasKey("tickCount", 99))
+        {
+            this.tickcount = par1NBT.getInteger("tickCount");
+        }
     }
     
     public int isAdjacentBlockFoodOrWater(World world, int foodorwaterblock){
@@ -382,6 +385,7 @@ public class EntityMCP extends EntityCreature {
     public void writeEntityToNBT(NBTTagCompound p_70014_1_){
     	super.writeEntityToNBT(p_70014_1_);
     	this.foodStats.writeNBT(p_70014_1_);
+    	p_70014_1_.setInteger("tickCount", tickcount);
     }
     
     //To prevent annoying drowning while testing. 
@@ -404,5 +408,9 @@ public class EntityMCP extends EntityCreature {
     	super.applyEntityAttributes();
     	
     	getEntityAttribute(SharedMonsterAttributes.followRange).setBaseValue(200.0D);
+    }
+    
+    public int getTickCount(){
+    	return this.tickcount; 
     }
 }

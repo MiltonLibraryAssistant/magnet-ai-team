@@ -272,10 +272,27 @@ public class GridSearchFramework {
     public static BlockPosition getTopBlock(int x, int z, World par3World)
     {
         int k;
-
-        for (k = 1; !par3World.isAirBlock(x, k + 1, z); ++k)
+        boolean isCovered = false; 
+        
+        //iterates through vertical blocks until it reaches height limit
+        for (k = 1; k <= 255; ++k)
         {
-            ;
+        	//finds an air block
+            if(par3World.isAirBlock(x, k + 1, z)){
+            	//checks if 100 blocks on top of air block are also air
+            	for(int j = k; j <= 100 || !par3World.isAirBlock(x, j, z); j++){
+            		if(!par3World.isAirBlock(x, j, z)){
+            			isCovered = true; 
+            		}
+            	}
+            	if(isCovered != true){
+            		return new BlockPosition(x, k, z);
+            	}
+            	else{
+            		isCovered = false; 
+            		//exists loop and goes back to checking for air
+            	}
+            }
         }
 
         return new BlockPosition(x, k, z);
@@ -285,7 +302,7 @@ public class GridSearchFramework {
     public static int isTopFoodBlockOrWaterBlock(int x, int z, World world){
     	//returns 0 for nothing, 1 for food, 2 far water
     	BlockPosition topBlock = getTopBlock(x, z, world);
-    	Block topBlockAsBlock = world.getBlock((int) topBlock.x, (int) topBlock.y, (int) topBlock.z); 
+    	Block topBlockAsBlock = world.getBlock((int) topBlock.x, (int) topBlock.y - 1, (int) topBlock.z); 
     	//System.out.println((int) topBlock.x + " " + (int) topBlock.y + " " + (int) topBlock.z);
     	if(topBlockAsBlock.getUnlocalizedName() == References.modId + ":FoodBlock"){
     		return 1; 
@@ -293,6 +310,7 @@ public class GridSearchFramework {
     	if(topBlockAsBlock.getMaterial() == Material.water){
     		return 2; 
     	}
+    	//System.out.println(topBlockAsBlock.getUnlocalizedName());
     	return 0; 
     }
     

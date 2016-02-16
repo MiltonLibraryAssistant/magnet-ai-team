@@ -35,52 +35,53 @@ public class EntityAISeekFoodLongDistance extends EntityAIBase {
 	@Override
 	public boolean shouldExecute() {
 		//test whether 
-		QuadrantPoint entityQuadrantPosition = GridSearchFramework.getQuadrant(this.attachedEntity.posX, this.attachedEntity.posZ); 
-		int waterOrFoodInQuadrant = GridSearchFramework.isWaterOrFoodInQuadrant(entityQuadrantPosition, attachedEntity.worldObj); 
-		if(waterOrFoodInQuadrant == 0 || waterOrFoodInQuadrant == 2){
-			try {
-				//Read quadrants from json
-				JSONParser parser = new JSONParser(); 
-				JSONObject jsonFileRead = new JSONObject(); 
-				
-				GridSearchFramework.testFileExists("quadrants.json"); 
-				BufferedReader br = new BufferedReader(new FileReader("quadrants.json"));     
-				if (!(br.readLine() == null)) {
-					Object fileRead = parser.parse(new FileReader ("quadrants.json"));
-					jsonFileRead = (JSONObject) fileRead; 
-				}
-				br.close(); 
-				
-				
-				 Set keys = jsonFileRead.keySet();
-				 Object[] jsonReadArray = keys.toArray(new Object[jsonFileRead.size()]); 
-				 
-				for(int i = 0; i < jsonFileRead.size(); i++){
-					//iterates through quadrants checking if any have food or water
-					Object quadrant = jsonReadArray[i]; 
-					String quadrantJSON = (String) quadrant;
-					JSONObject quadrantJSONData = (JSONObject) jsonFileRead.get(quadrantJSON); 
-					Long readdangerRating = (Long) quadrantJSONData.get("waterandfood");  
-					if(readdangerRating == 1 || readdangerRating == 3){
-						//tests whether potential quadrant is within same world
-						String readWorld = (String) quadrantJSONData.get("World");
-						if(readWorld.equals(this.attachedEntity.worldObj.getSaveHandler().getWorldDirectoryName())){
-							//1 is food, 3 is food and water
-							if(attachedEntity.getFoodStats().getHunger() < attachedEntity.getFoodStats().maxFoodLevel){
-								return true; 
+		//if(attachedEntity.getTickCount() % 5 == 0){
+			QuadrantPoint entityQuadrantPosition = GridSearchFramework.getQuadrant(this.attachedEntity.posX, this.attachedEntity.posZ); 
+			int waterOrFoodInQuadrant = GridSearchFramework.isWaterOrFoodInQuadrant(entityQuadrantPosition, attachedEntity.worldObj); 
+			if(waterOrFoodInQuadrant == 0 || waterOrFoodInQuadrant == 2){
+				try {
+					//Read quadrants from json
+					JSONParser parser = new JSONParser(); 
+					JSONObject jsonFileRead = new JSONObject(); 
+					
+					GridSearchFramework.testFileExists("quadrants.json"); 
+					BufferedReader br = new BufferedReader(new FileReader("quadrants.json"));     
+					if (!(br.readLine() == null)) {
+						Object fileRead = parser.parse(new FileReader ("quadrants.json"));
+						jsonFileRead = (JSONObject) fileRead; 
+					}
+					br.close(); 
+					
+					
+					 Set keys = jsonFileRead.keySet();
+					 Object[] jsonReadArray = keys.toArray(new Object[jsonFileRead.size()]); 
+					 
+					for(int i = 0; i < jsonFileRead.size(); i++){
+						//iterates through quadrants checking if any have food or water
+						Object quadrant = jsonReadArray[i]; 
+						String quadrantJSON = (String) quadrant;
+						JSONObject quadrantJSONData = (JSONObject) jsonFileRead.get(quadrantJSON); 
+						Long readdangerRating = (Long) quadrantJSONData.get("waterandfood");  
+						if(readdangerRating == 1 || readdangerRating == 3){
+							//tests whether potential quadrant is within same world
+							String readWorld = (String) quadrantJSONData.get("World");
+							if(readWorld.equals(this.attachedEntity.worldObj.getSaveHandler().getWorldDirectoryName())){
+								//1 is food, 3 is food and water
+								if(attachedEntity.getFoodStats().getHunger() < attachedEntity.getFoodStats().maxFoodLevel){
+									return true; 
+								}
 							}
 						}
 					}
 				}
+				catch (ParseException e) {
+					e.printStackTrace();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+					
 			}
-			catch (ParseException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-				
-		}
-		return false;
+			return false; 
 	}
 	
 	@Override
@@ -148,10 +149,9 @@ public class EntityAISeekFoodLongDistance extends EntityAIBase {
 						QuadrantPoint firstQuadrant = new QuadrantPoint(firstPoint.xCoord, firstPoint.zCoord);
 						//tries to path to valid quadrant center if one is found
 						BlockPosition pathTo = GridSearchFramework.getQuadrantCenter(firstQuadrant.X, firstQuadrant.Z, this.attachedEntity.worldObj); 
-						BlockPosition pathToAir = EntityAISeekFood.FindAdjacentAirBlock(attachedEntity.worldObj, pathTo); 
-						System.out.println(pathToAir.x + " " + pathToAir.y + " " + pathToAir.z);
+						//BlockPosition pathToAir = EntityAISeekFood.FindAdjacentAirBlock(attachedEntity.worldObj, pathTo); 
+						BlockPosition pathToAir = new BlockPosition(pathTo.x, pathTo.y + 1, pathTo.z);
 						if(pathToAir != null){
-							System.out.println("trying to execute distance pathfinding");
 							this.attachedEntity.tryMoveToXYZ(pathToAir);	
 						}
 					}
