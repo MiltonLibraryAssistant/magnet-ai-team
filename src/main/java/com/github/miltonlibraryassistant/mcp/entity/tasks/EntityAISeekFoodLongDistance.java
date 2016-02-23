@@ -36,7 +36,8 @@ public class EntityAISeekFoodLongDistance extends EntityAIBase {
 	public boolean shouldExecute() {
 		//test whether 
 		//if(attachedEntity.getTickCount() % 5 == 0){
-			QuadrantPoint entityQuadrantPosition = GridSearchFramework.getQuadrant(this.attachedEntity.posX, this.attachedEntity.posZ); 
+			QuadrantPoint entityQuadrantPosition = GridSearchFramework.getQuadrant(this.attachedEntity.posX, this.attachedEntity.posZ);
+			System.out.println(entityQuadrantPosition.X + " " + entityQuadrantPosition.Z);
 			int waterOrFoodInQuadrant = GridSearchFramework.isWaterOrFoodInQuadrant(entityQuadrantPosition, attachedEntity.worldObj); 
 			if(waterOrFoodInQuadrant == 0 || waterOrFoodInQuadrant == 2){
 				try {
@@ -68,6 +69,7 @@ public class EntityAISeekFoodLongDistance extends EntityAIBase {
 							if(readWorld.equals(this.attachedEntity.worldObj.getSaveHandler().getWorldDirectoryName())){
 								//1 is food, 3 is food and water
 								if(attachedEntity.getFoodStats().getHunger() < attachedEntity.getFoodStats().maxFoodLevel){
+									System.out.println("executing long-distance pathfinding");
 									return true; 
 								}
 							}

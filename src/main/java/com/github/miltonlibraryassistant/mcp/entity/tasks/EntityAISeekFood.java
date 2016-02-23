@@ -29,6 +29,8 @@ public class EntityAISeekFood extends EntityAIBase {
 			World world = attachedEntity.worldObj; 
 			if(isWaterOrFoodInQuadrant(quadrant, world) != null){
 				foodPosition = isWaterOrFoodInQuadrant(quadrant,world);
+				System.out.println(quadrant.X + " " + quadrant.Z);
+				System.out.println("executing short-distance pathfinding");
 				return true;
 			}
 		}

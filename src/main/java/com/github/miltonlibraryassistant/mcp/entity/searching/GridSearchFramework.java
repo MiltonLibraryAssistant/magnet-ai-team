@@ -304,13 +304,13 @@ public class GridSearchFramework {
     	BlockPosition topBlock = getTopBlock(x, z, world);
     	Block topBlockAsBlock = world.getBlock((int) topBlock.x, (int) topBlock.y - 1, (int) topBlock.z); 
     	//System.out.println((int) topBlock.x + " " + (int) topBlock.y + " " + (int) topBlock.z);
+    	//System.out.println(topBlockAsBlock.getUnlocalizedName());
     	if(topBlockAsBlock.getUnlocalizedName() == References.modId + ":FoodBlock"){
     		return 1; 
     	}
     	if(topBlockAsBlock.getMaterial() == Material.water){
     		return 2; 
     	}
-    	//System.out.println(topBlockAsBlock.getUnlocalizedName());
     	return 0; 
     }
     
