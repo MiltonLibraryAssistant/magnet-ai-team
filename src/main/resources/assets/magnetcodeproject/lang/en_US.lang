@@ -1,3 +1,4 @@
 entity.entitymcp.name=Passive (smart) entity
 entity.entityaggressormcp.name=Aggressor entity
 MAGNETCODEPROJECT:FoodBlock.name=Food Block
+generator.testfield.name=Intelligent Entity Testing

@@ -36,7 +36,7 @@ public class EntityAISeekFoodLongDistance extends EntityAIBase {
 	public boolean shouldExecute() { 
 		if((attachedEntity.getFoodStats().getHunger() / attachedEntity.getFoodStats().maxFoodLevel) <= (attachedEntity.getFoodStats().getThirst() / attachedEntity.getFoodStats().maxThirstLevel)){
 			QuadrantPoint entityQuadrantPosition = GridSearchFramework.getQuadrant(this.attachedEntity.posX, this.attachedEntity.posZ);
-			System.out.println(entityQuadrantPosition.X + " " + entityQuadrantPosition.Z);
+			//System.out.println(entityQuadrantPosition.X + " " + entityQuadrantPosition.Z);
 			int waterOrFoodInQuadrant = GridSearchFramework.isWaterOrFoodInQuadrant(entityQuadrantPosition, attachedEntity.worldObj); 
 			if(waterOrFoodInQuadrant == 0 || waterOrFoodInQuadrant == 2){
 				try {

@@ -19,8 +19,8 @@ public class EntityMCPFoodStats {
     		foodTimer++; 
     	}
     	else{
+    		System.out.println("foodlevel = " + foodLevel + "thirstLevel = " + thirstLevel);
     		if(foodSaturation == 0){
-        		System.out.println("foodlevel = " + foodLevel + "thirstLevel = " + thirstLevel);
         		if(foodLevel > 0){
         			foodLevel = foodLevel - 0.5; 
         		}
@@ -28,17 +28,19 @@ public class EntityMCPFoodStats {
                     par1EntityMCP.attackEntityFrom(DamageSource.starve, 1.0F);
                     //System.out.println("starving to death");
         		}
-        		if(thirstLevel > 0){
-        			thirstLevel = thirstLevel - 0.5;
-        		}
-        		else{
-        			par1EntityMCP.attackEntityFrom(DamageSource.starve, 1.0F); 
-        			//System.out.println("dehydrating to death");
-        		}
         		foodTimer = 0; 
     		}
     		else{
     			foodSaturation = foodSaturation - 0.5;
+    		}
+    		
+    		if(thirstSaturation == 0){
+    			if(thirstLevel > 0){
+    				thirstLevel = thirstLevel - 0.5; 
+    			}
+    			else{
+    				par1EntityMCP.attackEntityFrom(DamageSource.starve, 1.0F);
+    			}
     		}
 
     	}
@@ -85,6 +87,10 @@ public class EntityMCPFoodStats {
     
     public void setSaturation(double par1Int){
     	foodSaturation = par1Int; 
+    }
+    
+    public void setThirstSaturation(double par1Int){
+    	thirstSaturation = par1Int; 
     }
     
     public void setThirst(double par2Thirst){

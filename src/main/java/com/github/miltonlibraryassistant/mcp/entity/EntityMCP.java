@@ -244,6 +244,7 @@ public class EntityMCP extends EntityCreature {
         }
         if(isAdjacentBlockFoodOrWater(this.worldObj, 2) == 2){
         	this.foodStats.setThirst(this.foodStats.getThirst() + 1);
+        	this.foodStats.setThirstSaturation(20);
         }
     }
 	
