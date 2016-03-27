@@ -11,30 +11,31 @@ import net.minecraft.block.material.Material;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.world.World;
 
-public class EntityAISeekFood extends EntityAIBase {
+public class EntityAISeekWater extends EntityAIBase {
 
 	private EntityMCP attachedEntity; 
-	static BlockPosition foodPosition;
+	static BlockPosition waterPosition;
 	
-	public EntityAISeekFood(EntityMCP par1Entity){
+	public EntityAISeekWater(EntityMCP par1Entity){
 		this.attachedEntity = par1Entity; 
 		setMutexBits(1);
 	}
 	
 	@Override
 	public boolean shouldExecute() {
-		if((attachedEntity.getFoodStats().getHunger() / attachedEntity.getFoodStats().maxFoodLevel) <= (attachedEntity.getFoodStats().getThirst() / attachedEntity.getFoodStats().maxThirstLevel)){
-			if(attachedEntity.getFoodStats().getHunger() < attachedEntity.getFoodStats().maxFoodLevel){
+		if((attachedEntity.getFoodStats().getHunger() / attachedEntity.getFoodStats().maxFoodLevel) > (attachedEntity.getFoodStats().getThirst() / attachedEntity.getFoodStats().maxThirstLevel)){
+			if(attachedEntity.getFoodStats().getThirst() < attachedEntity.getFoodStats().maxThirstLevel){
 				QuadrantPoint quadrant = GridSearchFramework.getQuadrant(attachedEntity.posX, attachedEntity.posZ);
 				World world = attachedEntity.worldObj; 
 				if(isWaterOrFoodInQuadrant(quadrant, world) != null){
-					foodPosition = isWaterOrFoodInQuadrant(quadrant,world);
+					waterPosition = isWaterOrFoodInQuadrant(quadrant,world);
 					System.out.println(quadrant.X + " " + quadrant.Z);
-					System.out.println("executing short-distance pathfinding");
+					System.out.println("executing short-distance water pathfinding");
 					return true;
 				}
-			}
+			}	
 		}
+
 		return false;
 	}
 	
@@ -42,13 +43,13 @@ public class EntityAISeekFood extends EntityAIBase {
 	public boolean continueExecuting()
 	{	
 		if(shouldExecute()){
-			if(!(isWithinXBlocksOf((int) this.attachedEntity.posX, (int) foodPosition.x, 1) && isWithinXBlocksOf((int) this.attachedEntity.posY, (int) foodPosition.y, 1) && isWithinXBlocksOf((int) this.attachedEntity.posZ, (int) foodPosition.z, 1))){
-				BlockPosition relativeFoodPosition = FindAdjacentAirBlock(attachedEntity.worldObj, foodPosition);
+			if(!(isWithinXBlocksOf((int) this.attachedEntity.posX, (int) waterPosition.x, 1) && isWithinXBlocksOf((int) this.attachedEntity.posY, (int) waterPosition.y, 1) && isWithinXBlocksOf((int) this.attachedEntity.posZ, (int) waterPosition.z, 1))){
+				BlockPosition relativeFoodPosition = FindAdjacentAirBlock(attachedEntity.worldObj, waterPosition);
 				if(relativeFoodPosition != null){
 					this.attachedEntity.tryMoveToXYZ(relativeFoodPosition);	
 				}		
 			}
-			if(attachedEntity.getFoodStats().getHunger() == attachedEntity.getFoodStats().maxFoodLevel){
+			if(attachedEntity.getFoodStats().getThirst() == attachedEntity.getFoodStats().maxThirstLevel){
 				return false; 
 			}
 			return true; 
@@ -64,8 +65,8 @@ public class EntityAISeekFood extends EntityAIBase {
     		for(int j = 0; j <= 20; j++){
 	    		BlockPosition topBlock = GridSearchFramework.getTopBlock((int) quadrantCorner.x + j, (int) quadrantCorner.z + i, par2World);
 	        	Block topBlockAsBlock = par2World.getBlock((int) topBlock.x, (int) topBlock.y - 1, (int) topBlock.z); 
-	    		if(topBlockAsBlock.getUnlocalizedName() == References.modId + ":FoodBlock"){
-	    			foodPosition = topBlock;
+	    		if(topBlockAsBlock.getMaterial() == Material.water){
+	    			waterPosition = topBlock;
 	    			return topBlock; 
 	    		}
     		}

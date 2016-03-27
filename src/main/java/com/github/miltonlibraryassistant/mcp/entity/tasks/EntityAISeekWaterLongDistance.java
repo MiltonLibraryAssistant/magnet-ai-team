@@ -23,22 +23,22 @@ import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.pathfinding.PathEntity;
 import net.minecraft.world.World;
 
-public class EntityAISeekFoodLongDistance extends EntityAIBase {
+public class EntityAISeekWaterLongDistance extends EntityAIBase {
 	
 	private EntityMCP attachedEntity;
 	
-	public EntityAISeekFoodLongDistance(EntityMCP par1Entity){
+	public EntityAISeekWaterLongDistance(EntityMCP par1Entity){
 		this.attachedEntity = par1Entity; 
 		setMutexBits(1);
 	}
 	
 	@Override
-	public boolean shouldExecute() { 
-		if((attachedEntity.getFoodStats().getHunger() / attachedEntity.getFoodStats().maxFoodLevel) <= (attachedEntity.getFoodStats().getThirst() / attachedEntity.getFoodStats().maxThirstLevel)){
+	public boolean shouldExecute() {
+		if((attachedEntity.getFoodStats().getHunger() / attachedEntity.getFoodStats().maxFoodLevel) > (attachedEntity.getFoodStats().getThirst() / attachedEntity.getFoodStats().maxThirstLevel)){
 			QuadrantPoint entityQuadrantPosition = GridSearchFramework.getQuadrant(this.attachedEntity.posX, this.attachedEntity.posZ);
 			System.out.println(entityQuadrantPosition.X + " " + entityQuadrantPosition.Z);
 			int waterOrFoodInQuadrant = GridSearchFramework.isWaterOrFoodInQuadrant(entityQuadrantPosition, attachedEntity.worldObj); 
-			if(waterOrFoodInQuadrant == 0 || waterOrFoodInQuadrant == 2){
+			if(waterOrFoodInQuadrant == 0 || waterOrFoodInQuadrant == 1){
 				try {
 					//Read quadrants from json
 					JSONParser parser = new JSONParser(); 
@@ -62,13 +62,13 @@ public class EntityAISeekFoodLongDistance extends EntityAIBase {
 						String quadrantJSON = (String) quadrant;
 						JSONObject quadrantJSONData = (JSONObject) jsonFileRead.get(quadrantJSON); 
 						Long readdangerRating = (Long) quadrantJSONData.get("waterandfood");  
-						if(readdangerRating == 1 || readdangerRating == 3){
+						if(readdangerRating == 2 || readdangerRating == 3){
 							//tests whether potential quadrant is within same world
 							String readWorld = (String) quadrantJSONData.get("World");
 							if(readWorld.equals(this.attachedEntity.worldObj.getSaveHandler().getWorldDirectoryName())){
-								//1 is food, 3 is food and water
-								if(attachedEntity.getFoodStats().getHunger() < attachedEntity.getFoodStats().maxFoodLevel){
-									System.out.println("executing long-distance pathfinding");
+								//2 is water, 3 is food and water
+								if(attachedEntity.getFoodStats().getThirst() < attachedEntity.getFoodStats().maxThirstLevel){
+									System.out.println("executing long-distance water pathfinding");
 									return true; 
 								}
 							}
@@ -83,7 +83,7 @@ public class EntityAISeekFoodLongDistance extends EntityAIBase {
 					
 			}
 		}
-			return false; 
+		return false; 
 	}
 	
 	@Override
@@ -107,7 +107,7 @@ public class EntityAISeekFoodLongDistance extends EntityAIBase {
 				 Set keys = jsonFileRead.keySet();
 				 Object[] jsonReadArray = keys.toArray(new Object[jsonFileRead.size()]); 
 				 
-				 //grabs the closest quadrant containing food
+				 //grabs the closest quadrant containing water
 				 QuadrantPoint quadrantSearch = null; 
 				 QuadrantPoint entityQuadrantPosition = GridSearchFramework.getQuadrant(this.attachedEntity.posX, this.attachedEntity.posZ); 
 				for(int i = 0; i < jsonFileRead.size(); i++){
@@ -116,8 +116,8 @@ public class EntityAISeekFoodLongDistance extends EntityAIBase {
 					String quadrantJSON = (String) quadrant;
 					JSONObject quadrantJSONData = (JSONObject) jsonFileRead.get(quadrantJSON); 
 					Long readdangerRating = (Long) quadrantJSONData.get("waterandfood");  
-					if(readdangerRating == 1 || readdangerRating == 3){
-						//1 is food, 3 is food and water
+					if(readdangerRating == 2 || readdangerRating == 3){
+						//2 is water, 3 is food and water
 						if(quadrantSearch != null){
 							QuadrantPoint tempQuadrant = new QuadrantPoint((Double) quadrantJSONData.get("XPos"), (Double) quadrantJSONData.get("ZPos"));
 							//test if found quadrant is within same world

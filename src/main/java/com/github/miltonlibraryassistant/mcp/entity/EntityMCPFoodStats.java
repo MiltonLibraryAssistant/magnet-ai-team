@@ -12,6 +12,7 @@ public class EntityMCPFoodStats {
     private int prevFoodLevel = 20;
     private double thirstLevel = 40; 
     private double foodSaturation = 20; 
+    private double thirstSaturation = 40;
     
     public void onUpdate(EntityMCP par1EntityMCP){
     	if(foodTimer < 40){
@@ -31,7 +32,7 @@ public class EntityMCPFoodStats {
         			thirstLevel = thirstLevel - 0.5;
         		}
         		else{
-        			//par1EntityMCP.attackEntityFrom(DamageSource.starve, 1.0F); 
+        			par1EntityMCP.attackEntityFrom(DamageSource.starve, 1.0F); 
         			//System.out.println("dehydrating to death");
         		}
         		foodTimer = 0; 
