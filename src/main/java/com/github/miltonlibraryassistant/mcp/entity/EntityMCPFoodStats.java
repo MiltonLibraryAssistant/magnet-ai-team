@@ -19,7 +19,7 @@ public class EntityMCPFoodStats {
     		foodTimer++; 
     	}
     	else{
-    		System.out.println("foodlevel = " + foodLevel + "thirstLevel = " + thirstLevel);
+    		System.out.println("foodlevel = " + foodLevel + "thirstLevel = " + thirstLevel + "health = " + par1EntityMCP.getHealth());
     		if(foodSaturation == 0){
         		if(foodLevel > 0){
         			foodLevel = foodLevel - 0.5; 
@@ -57,6 +57,7 @@ public class EntityMCPFoodStats {
             this.thirstLevel = p_75112_1_.getInteger("thirstLevel");
             this.foodTimer = p_75112_1_.getInteger("foodTickTimer");
             this.foodSaturation = p_75112_1_.getDouble("foodSaturation");
+            this.thirstSaturation = p_75112_1_.getDouble("thirstSaturation");
         }
     }
 
@@ -69,6 +70,7 @@ public class EntityMCPFoodStats {
         p_75117_1_.setDouble("thirstLevel", thirstLevel);
         p_75117_1_.setInteger("foodTickTimer", foodTimer);
         p_75117_1_.setDouble("foodSaturation", foodSaturation);
+        p_75117_1_.setDouble("thirstSaturation", thirstSaturation);
     }
     
     public double getHunger(){

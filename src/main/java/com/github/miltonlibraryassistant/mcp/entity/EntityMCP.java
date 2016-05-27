@@ -20,6 +20,7 @@ import com.github.miltonlibraryassistant.mcp.entity.searching.QuadrantPoint;
 import com.github.miltonlibraryassistant.mcp.entity.tasks.EntityAISeekFood;
 import com.github.miltonlibraryassistant.mcp.entity.tasks.EntityAISeekFoodLongDistance;
 import com.github.miltonlibraryassistant.mcp.entity.tasks.EntityAISeekWater;
+import com.github.miltonlibraryassistant.mcp.entity.tasks.EntityAISeekWaterLongDistance;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -51,8 +52,8 @@ public class EntityMCP extends EntityCreature {
         this.tasks.addTask(2, new EntityAISeekFood(this));
         this.tasks.addTask(3, new EntityAISeekFoodLongDistance(this));
         this.tasks.addTask(4, new EntityAISeekWater(this));
-		this.tasks.addTask(5, new EntityAIWander(this, 1.0D));
-		//tasks for water will be here eventually, those will be lower priority than food
+        this.tasks.addTask(5, new EntityAISeekWaterLongDistance(this));
+		this.tasks.addTask(6, new EntityAIWander(this, 1.0D));
 		
 		if(!(par1World.isRemote)){
 			try {
@@ -245,6 +246,9 @@ public class EntityMCP extends EntityCreature {
         if(isAdjacentBlockFoodOrWater(this.worldObj, 2) == 2){
         	this.foodStats.setThirst(this.foodStats.getThirst() + 1);
         	this.foodStats.setThirstSaturation(20);
+        }
+        if(this.foodStats.getHunger() == this.foodStats.maxFoodLevel && this.foodStats.getThirst() == this.foodStats.maxThirstLevel && this.getHealth() < this.getMaxHealth()){
+        	this.heal(this.getHealth() + 1);
         }
     }
 	
